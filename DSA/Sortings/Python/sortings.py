@@ -2,8 +2,8 @@ from collections.abc import Iterable
 from typing import Protocol, TypeVar
 
 def Comparable(Protocol):
-    def __eq__(self, other) -> bool: ...
-    def __lt__(self, other) -> bool: ...
+    #def __eq__(self, other) -> bool: ...
+    #def __lt__(self, other) -> bool: ...
     def __gt__(self, other) -> bool: ...
 
 T = TypeVar('T', bound = Comparable)
@@ -57,4 +57,34 @@ def cocktail_sort(iterable: Iterable[T]) -> list[T]:
                 arr[j - 1], arr[j] = arr[j], arr[j - 1]
                 border = j
         left = border
+    return arr
+
+def insertion_sort(iterable: Iterable[T]) -> list[T]:
+    """Insertion sort. Returns a new sorted list[T]."""
+    arr: list[T] = list(iterable)
+    for i in range(1, len(arr)):
+        item = arr[i]
+        j = i - 1
+        while j >= 0 and arr[j] > item:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = item
+    return arr
+
+def dwarf_sort(iterable: Iterable[T]) -> list[T]:
+    """Dwarf sort. Returns a new sorted list[T]."""
+    arr: list[T] = list(iterable)
+    i = 1
+    j = i + 1
+    while i < len(arr):
+        if arr[i - 1] > arr[i]:
+            arr[i - 1], arr[i] = arr[i], arr[i - 1]
+            i -= 1
+            if i == 0:
+                i = j
+                j += 1
+            continue
+        # if arr[i - 1] <= arr[i]
+        i = j
+        j += 1
     return arr
