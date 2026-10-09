@@ -9,7 +9,10 @@ SORTS: Final = [
     sortings.bubble_sort,
     sortings.cocktail_sort,
     sortings.insertion_sort,
-    sortings.dwarf_sort
+    sortings.dwarf_sort,
+    sortings.selection_sort,
+    sortings.quick_sort,
+    sortings.quick_sort_by_first
 ]
 
 LENS: Final = [
