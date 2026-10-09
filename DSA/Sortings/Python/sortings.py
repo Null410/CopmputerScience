@@ -78,16 +78,12 @@ def dwarf_sort(iterable: Iterable[T]) -> list[T]:
     i = 1
     j = i + 1
     while i < len(arr):
-        if arr[i - 1] > arr[i]:
-            arr[i - 1], arr[i] = arr[i], arr[i - 1]
-            i -= 1
-            if i == 0:
-                i = j
-                j += 1
-        else:
-            # if arr[i - 1] <= arr[i]
+        if i == 0 or arr[i - 1] <= arr[i]:
             i = j
             j += 1
+        else:
+            arr[i - 1], arr[i] = arr[i], arr[i - 1]
+            i -= 1
     return arr
 
 def selection_sort(iterable: Iterable[T]) -> list[T]:
