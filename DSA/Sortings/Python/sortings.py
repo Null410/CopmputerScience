@@ -149,3 +149,31 @@ def quick_sort_by_first(iterable: Iterable[T]) -> list[T]:
 
     quick(arr, 0, len(arr) - 1)
     return arr
+
+def merge_sort(iterable: Iterable[T]) -> list[T]:
+    """Merge sort. Returns a new sorted list[T]."""
+    arr: list[T] = list(iterable)
+
+    def merge(left: list[T], right: list[T]) -> list[T]:
+        sorted_arr = []
+        i = j = 0
+        while i < len(left) and j < len(right):
+            if left[i] < right[j]:
+                sorted_arr.append(left[i])
+                i += 1
+            else:
+                sorted_arr.append(right[j])
+                j += 1
+        sorted_arr.extend(left[i:])
+        sorted_arr.extend(right[j:])
+        return sorted_arr
+
+    def divide_sort(arr: list[T]) -> list[T]:
+        if len(arr) <= 1:
+            return arr
+        mid = len(arr) // 2
+        left = divide_sort(arr[:mid])
+        right = divide_sort(arr[mid:])
+        return merge(left, right)
+
+    return divide_sort(arr)
