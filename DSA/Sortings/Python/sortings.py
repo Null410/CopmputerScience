@@ -1,4 +1,4 @@
-from collections.abc import Iterable
+from collections.abc import Iterable, Callable
 from typing import Protocol, TypeVar
 
 def Comparable(Protocol):
@@ -230,5 +230,22 @@ def comb_same_sort(iterable: Iterable[T]) -> list[T]:
             if border <= 1:
                 break
             continue
+        step = next_step(step)
+    return arr
+
+def shell_sort(iterable: Iterable[T]) -> list[T]:
+    """Shell sort. Returns a new sorted list[T]."""
+    arr: list[T] = list(iterable)
+    def next_step(step):
+        return step // 2
+    step = next_step(len(arr))
+    while step > 0:
+        for i in range(step, len(arr)):
+            item = arr[i]
+            j = i - step
+            while j >= 0 and arr[j] > item:
+                arr[j + step] = arr[j]
+                j -= step
+            arr[j + step] = item
         step = next_step(step)
     return arr

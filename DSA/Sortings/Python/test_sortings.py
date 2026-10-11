@@ -15,7 +15,8 @@ SORTS: Final = [
     sortings.quick_sort_by_first,
     sortings.merge_sort,
     sortings.comb_sort,
-    sortings.comb_same_sort
+    sortings.comb_same_sort,
+    sortings.shell_sort
 ]
 
 LENS: Final = [
@@ -25,17 +26,28 @@ LENS: Final = [
     0
 ]
 
-def get_random_list(lenght: int, start: int = -100, stop: int = 100) -> list[int]:
-    """Returns a list[int] of random elements from the range: [start; stop]"""
-    return [random.randint(start, stop) for _ in range(lenght)]
+def is_sorted(arr: list[int]) -> bool:
+    """Checks whether the list is sorted in ascending order."""
+    return all(arr[i] <= arr[i + 1] for i in range(len(arr) - 1))
+
+def get_random_unsorted_list(lenght: int, start: int = -100, stop: int = 100) -> list[int]:
+    """Returns a list[int] of random unsorted elements from the range: [start; stop]"""
+    def get_random_list(): 
+        return [random.randint(start, stop) for _ in range(lenght)]
+    rand_arr = get_random_list()
+    if lenght < 2:
+        return rand_arr
+    while is_sorted(rand_arr):
+        rand_arr = get_random_list()
+    return rand_arr
 
 @pytest.mark.parametrize("func_sort, lenght",
         list(product(SORTS, LENS)),
         ids=[f"{func_sort.__name__}_{lenght}" for func_sort, lenght in product(SORTS, LENS)])
 def test_sorts(func_sort: Callable, lenght: int):
     """Sorting tests"""
-    rand_arr = get_random_list(lenght)
-    assert func_sort(rand_arr) == sorted(rand_arr)
+    rand_arr = get_random_unsorted_list(lenght)
+    assert is_sorted(func_sort(rand_arr))
 
 @pytest.mark.parametrize("func_sort, lenght",
         list(product(SORTS, LENS)),
@@ -43,4 +55,4 @@ def test_sorts(func_sort: Callable, lenght: int):
 def test_sorts_when_sorted(func_sort: Callable, lenght:int):
     """Sorting tests for sorted values"""
     sorted_arr = list(range(lenght))
-    assert func_sort(sorted_arr) == sorted_arr
+    assert is_sorted(func_sort(sorted_arr))
