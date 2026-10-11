@@ -42,14 +42,13 @@ def cocktail_sort(iterable: Iterable[T]) -> list[T]:
     left = 0
     right = len(arr) - 1
     while left < right:
-        swapped = False
         border = left
         for i in range(left, right):
             if arr[i] > arr[i + 1]:
                 arr[i], arr[i + 1] = arr[i + 1], arr[i]
-                swapped = True
                 border = i
-        if not swapped:
+        #Optional if block
+        if border == left:
             break
         right = border
 
@@ -177,3 +176,59 @@ def merge_sort(iterable: Iterable[T]) -> list[T]:
         return merge(left, right)
 
     return divide_sort(arr)
+
+#I like this one more than comb_same_sort
+def comb_sort(iterable: Iterable[T]) -> list[T]:
+    """Comb sort. Returns a new sorted list[T]."""
+    arr: list[T] = list(iterable)
+
+    f = 1.247331
+    def next_step(step):
+        return int(step / f)
+
+    #comb
+    step = next_step(len(arr))
+    while step > 1:
+        for i in range(len(arr) - step):
+            if arr[i] > arr[i + step]:
+                arr[i], arr[i + step] = arr[i + step], arr[i]
+        step = next_step(step)
+
+    #bubble
+    n = len(arr)
+    while n > 1:
+        border = 0
+        for i in range(n - 1):
+            if arr[i] > arr[i + 1]:
+                arr[i], arr[i + 1] = arr[i + 1], arr[i]
+                border = i + 1
+        n = border
+    return arr
+
+#Same to comb_sort
+def comb_same_sort(iterable: Iterable[T]) -> list[T]:
+    """Comb sort (same to comb_sort). Returns a new sorted list[T]."""
+    arr: list[T] = list(iterable)
+
+    n = len(arr)
+    if n <= 1:
+        return arr
+
+    f = 1.247331
+    def next_step(step):
+        result = int(step / f)
+        return 1 if result <= 1 else result
+
+    step = next_step(n)
+    while step >= 1:
+        border = 0
+        for i in range(n - step):
+            if arr[i] > arr[i + step]:
+                border = i + step
+                arr[i], arr[border] = arr[border], arr[i]
+        if step == 1:
+            if border <= 1:
+                break
+            continue
+        step = next_step(step)
+    return arr

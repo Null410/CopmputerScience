@@ -13,7 +13,9 @@ SORTS: Final = [
     sortings.selection_sort,
     sortings.quick_sort,
     sortings.quick_sort_by_first,
-    sortings.merge_sort
+    sortings.merge_sort,
+    sortings.comb_sort,
+    sortings.comb_same_sort
 ]
 
 LENS: Final = [
