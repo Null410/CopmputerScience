@@ -249,3 +249,21 @@ def shell_sort(iterable: Iterable[T]) -> list[T]:
             arr[j + step] = item
         step = next_step(step)
     return arr
+
+def shell_knuth_sort(iterable: Iterable[T]) -> list[T]:
+    """Shell sort (Knuth sequence). Returns a new sorted list[T]."""
+    arr: list[T] = list(iterable)
+    step = 1
+    while step < len(arr) // 3:
+        step = step * 3 + 1
+    print(step)
+    while step > 0:
+        for i in range(step, len(arr)):
+            item = arr[i]
+            j = i
+            while j >= step and arr[j - step] > item:
+                arr[j] = arr[j - step]
+                j -= step
+            arr[j] = item
+        step = (step - 1) // 3
+    return arr

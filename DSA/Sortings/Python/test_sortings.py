@@ -16,7 +16,8 @@ SORTS: Final = [
     sortings.merge_sort,
     sortings.comb_sort,
     sortings.comb_same_sort,
-    sortings.shell_sort
+    sortings.shell_sort,
+    sortings.shell_knuth_sort
 ]
 
 LENS: Final = [
