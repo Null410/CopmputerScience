@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Any
+from typing import Any, Iterable
 #from warnings import deprecated
 
 class Node:
@@ -23,10 +23,32 @@ class Node:
     def next(self, next_node: Node | None):
         self._next = next_node
 
-class List:
+class LinkedList:
     """Represents a linked list"""
     def __init__(self, head: Node | None = None):
         self._head = head
+
+    @property
+    def length(self) -> int:
+        """Calculates and returns the length of the list"""
+        leng = 0
+        node = self._head
+        while node:
+            leng += 1
+            node = node.next
+        return leng
+
+    def push(self, value: Any):
+        """Push a new value to the end of the list"""
+        new_node = Node(value)
+        if self._head is None:
+            self._head = new_node
+            return
+        tail = self._head
+        while tail.next:
+            tail = tail.next
+        tail.next = new_node
+
     @classmethod
     def from_values(cls, *args):
         """Returns a new list from args"""
@@ -39,6 +61,21 @@ class List:
             else:
                 tail.next = new_node
                 tail = tail.next
+        return cls(head)
+
+    @classmethod
+    def from_iterable(cls, iterable: Iterable):
+        """Returns a new list from iterable"""
+        head = None
+        tail = None
+
+        for item in iterable:
+            node = Node(item)
+            if head is None:
+                head = tail = node
+                continue
+            tail.next = node
+            tail = tail.next
         return cls(head)
 
     @classmethod
@@ -135,3 +172,18 @@ class List:
             result += f"{tmp.value} -> "
             tmp = tmp.next
         return result[:-4]
+
+    def __iter__(self):
+        return ListIterator(self._head)
+class ListIterator:
+    """Represents a linked list iterator"""
+    def __init__(self, head: Node):
+        self.__head = head
+    def __iter__(self):
+        return self
+    def __next__(self):
+        if self.__head is None:
+            raise StopIteration
+        node = self.__head
+        self.__head = self.__head.next
+        return node.value
