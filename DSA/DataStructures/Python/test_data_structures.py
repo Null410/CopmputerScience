@@ -1,6 +1,6 @@
 from itertools import product
 from typing import Final, Callable
-from list import LinkedList
+from linked_list import LinkedList
 import pytest
 
 @pytest.mark.parametrize("values", [
