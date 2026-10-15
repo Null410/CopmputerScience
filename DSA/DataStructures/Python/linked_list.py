@@ -20,13 +20,17 @@ class LinkedList:
     def push(self, value: Any):
         """Push a new value to the end of the list"""
         new_node = Node(value)
-        if self._head is None:
+        if self.is_empty():
             self._head = new_node
             return
         tail = self._head
         while tail.next:
             tail = tail.next
         tail.next = new_node
+
+    def is_empty(self):
+        """Returns True if list is empty and False if not"""
+        return self._head is None
 
     @classmethod
     def from_values(cls, *args):
@@ -146,7 +150,7 @@ class LinkedList:
         return cls(processing_iter(args)[0])
 
     def __str__(self):
-        if self._head is None:
+        if self.is_empty():
             return "None"
         result = ''
         tmp = self._head
