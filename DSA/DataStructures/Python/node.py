@@ -4,9 +4,9 @@ from typing import Any
 class Node:
     """Represents a node"""
     __slots__ = ['_value', '_next']
-    def __init__(self, value: Any, next_node: 'Node' | None = None):
+    def __init__(self, value: Any):
         self._value = value
-        self._next = next_node
+        self._next = None
     @property
     def value(self):
         """Returns a value"""
@@ -19,5 +19,5 @@ class Node:
         """Returns a next node"""
         return self._next
     @next.setter
-    def next(self, next_node: Node | None):
+    def next(self, next_node: 'Node' | None):
         self._next = next_node
