@@ -2,6 +2,7 @@ from itertools import product
 from collections.abc import Sequence
 from typing import Final, Callable
 from linked_list import LinkedList
+from linked_list_pro import LinkedListPro
 from stack import Stack
 import pytest
 
@@ -41,6 +42,8 @@ def test_list_length(length):
     list_ = get_default_list(length)
     assert list_.length == length
 
+#LinkedListPro
+
 @pytest.mark.parametrize("args", [
     (),
     (1,),
@@ -52,7 +55,7 @@ def test_list_length(length):
 ])
 def test_list_from_values(args):
     """Tests for creating a list from *args"""
-    list_ = LinkedList.from_values(*args)
+    list_ = LinkedListPro.from_values(*args)
     assert compare_sequences(list_, args)
 
 @pytest.mark.parametrize("iterable", [
@@ -64,19 +67,19 @@ def test_list_from_values(args):
 ])
 def test_list_from_iterable(iterable):
     """Tests for creating a list from iterable"""
-    list_ = LinkedList.from_iterable(iterable)
+    list_ = LinkedListPro.from_iterable(iterable)
     assert compare_sequences(list_, iterable)
 
 ITER_FUNCS: Final = [
-    LinkedList.from_iter_values,
-    LinkedList.from_iter_values_alternative_1,
-    LinkedList.from_iter_values_alternative_2
+    LinkedListPro.from_iter_values,
+    LinkedListPro.from_iter_values_alternative_1,
+    LinkedListPro.from_iter_values_alternative_2
 ]
 
 @pytest.mark.parametrize("iter_func", ITER_FUNCS)
 def test_list_from_iter_values_when_empty(iter_func):
     """Tests for creating a list from iterable"""
-    list_: LinkedList = iter_func()
+    list_: LinkedListPro = iter_func()
     assert list_.length == 0
 
 ARGS_WITH_EXPECTED: Final = [
@@ -101,7 +104,7 @@ def test_list_from_iter_values(args_with_expected, from_iter_func: Callable):
     """Tests for LinkedList.from_iter_values (and alternatives)"""
     args = args_with_expected[0]
     expected = args_with_expected[1]
-    list_: LinkedList = from_iter_func(*args)
+    list_: LinkedListPro = from_iter_func(*args)
     assert compare_sequences(list_, expected)
 
 #Stack
@@ -121,17 +124,30 @@ def test_stack_push(values):
         stack.push(v)
     assert compare_sequences(stack, values[::-1])
 
+def get_stack_from_list(arr: list) -> Stack:
+    """
+    Returna a new stack from a list.
+    The order of thr elements is preserved.
+    Example:
+        Input: [1, 2, 3]
+        Output: 1 -> 2 -> 3
+    """
+    stack = Stack()
+    for a in arr[::-1]:
+        stack.push(a)
+    return stack
+
 @pytest.mark.parametrize("values", STACK_VALUES)
 def test_stask_pop(values):
     """Stack POP tests"""
-    stack = Stack.from_iterable(values)
+    stack = get_stack_from_list(values)
     value = stack.pop()
     assert value == values[0] and compare_sequences(stack, values[1:])
 
 @pytest.mark.parametrize("values", STACK_VALUES)
 def test_stask_peek(values):
     """Stack PEEK tests"""
-    stack = Stack.from_iterable(values)
+    stack = get_stack_from_list(values)
     value = stack.peek()
     assert value == values[0] and len(stack) == len(values)
 
