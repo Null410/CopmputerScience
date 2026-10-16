@@ -159,6 +159,9 @@ class LinkedList:
             tmp = tmp.next
         return result[:-4]
 
+    def __len__(self):
+        return self.length
+
     def __iter__(self):
         return ListIterator(self._head)
 

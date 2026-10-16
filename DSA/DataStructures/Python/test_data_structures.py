@@ -1,7 +1,15 @@
 from itertools import product
+from collections.abc import Sequence
 from typing import Final, Callable
 from linked_list import LinkedList
+from stack import Stack
 import pytest
+
+def compare_sequences(seq1: Sequence, seq2: Sequence):
+    """Compare sequences"""
+    return len(seq1) == len(seq2) and all (a1 == a2 for a1, a2 in zip(seq1, seq2))
+
+#LinkedList
 
 @pytest.mark.parametrize("values", [
     [1],
@@ -10,12 +18,12 @@ import pytest
     ['1', 2, (3, 4)],
     [None]
 ])
-def test_push(values):
-    """Push method tests"""
+def test_list_push(values):
+    """Linked list PUSH tests"""
     list_ = LinkedList()
     for v in values:
         list_.push(v)
-    assert all(l == v for l, v in zip(list_, values))
+    assert compare_sequences(list_, values)
 
 def get_default_list(length: int) -> LinkedList:
     """Return a default linked list"""
@@ -45,7 +53,7 @@ def test_list_length(length):
 def test_list_from_values(args):
     """Tests for creating a list from *args"""
     list_ = LinkedList.from_values(*args)
-    assert list_.length == len(args) and all(l == arg for l, arg in zip(list_, args))
+    assert compare_sequences(list_, args)
 
 @pytest.mark.parametrize("iterable", [
     [],
@@ -57,7 +65,7 @@ def test_list_from_values(args):
 def test_list_from_iterable(iterable):
     """Tests for creating a list from iterable"""
     list_ = LinkedList.from_iterable(iterable)
-    assert list_.length == len(iterable) and all (l == i for l, i in zip(list_, iterable))
+    assert compare_sequences(list_, iterable)
 
 ITER_FUNCS: Final = [
     LinkedList.from_iter_values,
@@ -66,7 +74,7 @@ ITER_FUNCS: Final = [
 ]
 
 @pytest.mark.parametrize("iter_func", ITER_FUNCS)
-def test_from_iter_values_when_empty(iter_func):
+def test_list_from_iter_values_when_empty(iter_func):
     """Tests for creating a list from iterable"""
     list_: LinkedList = iter_func()
     assert list_.length == 0
@@ -89,9 +97,50 @@ ARGS_WITH_EXPECTED: Final = [
     list(product(ARGS_WITH_EXPECTED, ITER_FUNCS)),
     ids=[f"{f.__name__} for {a[0]}" for a, f in product(ARGS_WITH_EXPECTED, ITER_FUNCS)]
 )
-def test_from_iter_values(args_with_expected, from_iter_func: Callable):
+def test_list_from_iter_values(args_with_expected, from_iter_func: Callable):
     """Tests for LinkedList.from_iter_values (and alternatives)"""
     args = args_with_expected[0]
     expected = args_with_expected[1]
     list_: LinkedList = from_iter_func(*args)
-    assert list_.length == len(expected) and all(l == e for l, e in zip(list_, expected))
+    assert compare_sequences(list_, expected)
+
+#Stack
+
+STACK_VALUES: Final = [
+    [1],
+    [1, 2, 3],
+    ['1', 2, '3'],
+    [None]
+]
+
+@pytest.mark.parametrize("values", STACK_VALUES)
+def test_stack_push(values):
+    """Stack PUSH tests"""
+    stack = Stack()
+    for v in values:
+        stack.push(v)
+    assert compare_sequences(stack, values[::-1])
+
+@pytest.mark.parametrize("values", STACK_VALUES)
+def test_stask_pop(values):
+    """Stack POP tests"""
+    stack = Stack.from_iterable(values)
+    value = stack.pop()
+    assert value == values[0] and compare_sequences(stack, values[1:])
+
+@pytest.mark.parametrize("values", STACK_VALUES)
+def test_stask_peek(values):
+    """Stack PEEK tests"""
+    stack = Stack.from_iterable(values)
+    value = stack.peek()
+    assert value == values[0] and len(stack) == len(values)
+
+@pytest.mark.parametrize("method", [
+    Stack.pop,
+    Stack.peek
+])
+def test_pop_peek_index_error(method):
+    """Stack IndexError tests (pop, peek)"""
+    stack = Stack()
+    with pytest.raises(IndexError):
+        method(stack)
