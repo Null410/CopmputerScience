@@ -1,24 +1,30 @@
 from itertools import product
 from collections.abc import Sequence
 from typing import Final, Callable
+import pytest
 from linked_list import LinkedList
 from linked_list_pro import LinkedListPro
 from stack import Stack
-import pytest
+from queue_ import Queue
 
 def compare_sequences(seq1: Sequence, seq2: Sequence):
     """Compare sequences"""
     return len(seq1) == len(seq2) and all (a1 == a2 for a1, a2 in zip(seq1, seq2))
 
-#LinkedList
-
-@pytest.mark.parametrize("values", [
+VALUES: Final = [
     [1],
     ['1'],
+    ['1', 2, '3'],
     [1, [2, 3]],
     ['1', 2, (3, 4)],
     [None]
-])
+]
+
+#LinkedList
+
+@pytest.mark.parametrize("values",
+    VALUES,
+    ids=[str(value) for value in VALUES])
 def test_list_push(values):
     """Linked list PUSH tests"""
     list_ = LinkedList()
@@ -36,7 +42,8 @@ def get_default_list(length: int) -> LinkedList:
 @pytest.mark.parametrize("length",[
     0,
     10
-])
+],
+ids = ['0', '10'])
 def test_list_length(length):
     """List length tests"""
     list_ = get_default_list(length)
@@ -109,14 +116,7 @@ def test_list_from_iter_values(args_with_expected, from_iter_func: Callable):
 
 #Stack
 
-STACK_VALUES: Final = [
-    [1],
-    [1, 2, 3],
-    ['1', 2, '3'],
-    [None]
-]
-
-@pytest.mark.parametrize("values", STACK_VALUES)
+@pytest.mark.parametrize("values", VALUES)
 def test_stack_push(values):
     """Stack PUSH tests"""
     stack = Stack()
@@ -124,7 +124,39 @@ def test_stack_push(values):
         stack.push(v)
     assert compare_sequences(stack, values[::-1])
 
-def get_stack_from_list(arr: list) -> Stack:
+@pytest.mark.parametrize("method", [
+    Stack.pop,
+    Stack.peek
+])
+def test_stack_pop_peek_index_error(method):
+    """Stack IndexError tests (pop, peek)"""
+    stack = Stack()
+    with pytest.raises(IndexError):
+        method(stack)
+
+#Queue
+
+@pytest.mark.parametrize("values", VALUES)
+def test_queue_push(values):
+    """Queue PUSH tests"""
+    queue = Queue()
+    for value in values:
+        queue.push(value)
+    assert compare_sequences(queue, values)
+
+@pytest.mark.parametrize("method", [
+    Queue.pop,
+    Queue.peek
+])
+def test_queue_pop_peek_index_error(method):
+    """Quequ IndexError tests (pop, peek)"""
+    queue = Queue()
+    with pytest.raises(IndexError):
+        method(queue)
+
+#Stack and Queue
+
+def get_stack(arr: list) -> Stack:
     """
     Returna a new stack from a list.
     The order of thr elements is preserved.
@@ -137,26 +169,32 @@ def get_stack_from_list(arr: list) -> Stack:
         stack.push(a)
     return stack
 
-@pytest.mark.parametrize("values", STACK_VALUES)
-def test_stask_pop(values):
-    """Stack POP tests"""
-    stack = get_stack_from_list(values)
-    value = stack.pop()
-    assert value == values[0] and compare_sequences(stack, values[1:])
+def get_queue(arr: list) -> Stack:
+    """Returna a new queue from a list."""
+    queue = Queue()
+    for a in arr:
+        queue.push(a)
+    return queue
 
-@pytest.mark.parametrize("values", STACK_VALUES)
-def test_stask_peek(values):
-    """Stack PEEK tests"""
-    stack = get_stack_from_list(values)
-    value = stack.peek()
-    assert value == values[0] and len(stack) == len(values)
+GET_FUNCS = [
+    get_stack,
+    get_queue
+]
 
-@pytest.mark.parametrize("method", [
-    Stack.pop,
-    Stack.peek
-])
-def test_pop_peek_index_error(method):
-    """Stack IndexError tests (pop, peek)"""
-    stack = Stack()
-    with pytest.raises(IndexError):
-        method(stack)
+@pytest.mark.parametrize("values, get_func",
+    list(product(VALUES, GET_FUNCS)),
+    ids = [f"{get_func.__name__}_{value}" for value, get_func in product(VALUES, GET_FUNCS)])
+def test_stask_queue_pop(values, get_func):
+    """Stack and Queue POP tests"""
+    struct = get_func(values)
+    value = struct.pop()
+    assert value == values[0] and compare_sequences(struct, values[1:])
+
+@pytest.mark.parametrize("values, get_func",
+    list(product(VALUES, GET_FUNCS)),
+    ids = [f"{get_func.__name__}_{value}" for value, get_func in product(VALUES, GET_FUNCS)])
+def test_stask_queue_peek(values, get_func):
+    """Stack and Queue PEEK tests"""
+    struct = get_func(values)
+    value = struct.peek()
+    assert value == values[0] and len(struct) == len(values)
