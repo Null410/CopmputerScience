@@ -33,7 +33,7 @@ def is_sorted(arr: list[int]) -> bool:
 
 def get_random_unsorted_list(lenght: int, start: int = -100, stop: int = 100) -> list[int]:
     """Returns a list[int] of random unsorted elements from the range: [start; stop]"""
-    def get_random_list(): 
+    def get_random_list():
         return [random.randint(start, stop) for _ in range(lenght)]
     rand_arr = get_random_list()
     if lenght < 2:

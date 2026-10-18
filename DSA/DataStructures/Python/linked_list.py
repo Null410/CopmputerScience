@@ -1,4 +1,5 @@
-from typing import Any
+from __future__ import annotations
+from typing import Any, overload
 from node import Node
 
 class LinkedList:
@@ -46,6 +47,34 @@ class LinkedList:
 
     def __iter__(self):
         return ListIterator(self._head)
+
+    @overload
+    def __getitem__(self, idx: int) -> Any:
+        ...
+
+    @overload
+    def __getitem__(self, idx: slice) -> 'LinkedList':
+        ...
+
+    def __getitem__(self, idx: int | slice) -> Any | 'LinkedList':
+        if isinstance(idx, slice):
+            # may be implemented later
+            raise NotImplementedError
+
+        if idx < 0:
+            leng = self.length
+            idx = leng + idx
+            if idx < 0:
+                raise IndexError
+
+        node = self._head
+        while node and idx >= 0:
+            result = node.value
+            node = node.next
+            idx -= 1
+        if idx >= 0:
+            raise IndexError
+        return result
 
 class ListIterator:
     """Represents a linked list iterator"""

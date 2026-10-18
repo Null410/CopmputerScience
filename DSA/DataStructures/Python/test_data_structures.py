@@ -49,6 +49,32 @@ def test_list_length(length):
     list_ = get_default_list(length)
     assert list_.length == length
 
+@pytest.mark.parametrize("length, idx",[
+    (1, 0),
+    (2, 1),
+    (3, 2),
+    (10, 5),
+    (1, -1),
+    (2, -1)
+])
+def test_list_getitem(length, idx):
+    """List __getitem__ tests"""
+    list_ = get_default_list(length)
+    exp = list(range(length))
+    assert list_[idx] == exp[idx]
+
+@pytest.mark.parametrize("length, idx",[
+    (1, -2),
+    (1, 1),
+    (1, 2),
+    (2, 10)
+])
+def test_list_getitem_index_error(length, idx):
+    """List __getitem__ IndexError tests"""
+    list_ = get_default_list(length)
+    with pytest.raises(IndexError):
+        _ = list_[idx]
+
 #LinkedListPro
 
 @pytest.mark.parametrize("args", [
