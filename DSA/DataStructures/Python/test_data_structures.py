@@ -47,7 +47,7 @@ ids = ['0', '10'])
 def test_list_length(length):
     """List length tests"""
     list_ = get_default_list(length)
-    assert list_.length == length
+    assert len(list_) == length
 
 @pytest.mark.parametrize("length, idx",[
     (1, 0),
@@ -113,7 +113,7 @@ ITER_FUNCS: Final = [
 def test_list_from_iter_values_when_empty(iter_func):
     """Tests for creating a list from iterable"""
     list_: LinkedListPro = iter_func()
-    assert list_.length == 0
+    assert len(list_) == 0
 
 ARGS_WITH_EXPECTED: Final = [
     [ ( 1, ), [1] ],
@@ -214,7 +214,7 @@ def test_stask_queue_pop(values, get_func):
     """Stack and Queue POP tests"""
     struct = get_func(values)
     value = struct.pop()
-    assert value == values[0] and compare_sequences(struct, values[1:])
+    assert value == values[0] and len(struct) == len(values) - 1 and compare_sequences(struct, values[1:])
 
 @pytest.mark.parametrize("values, get_func",
     list(product(VALUES, GET_FUNCS)),
@@ -223,4 +223,4 @@ def test_stask_queue_peek(values, get_func):
     """Stack and Queue PEEK tests"""
     struct = get_func(values)
     value = struct.peek()
-    assert value == values[0] and len(struct) == len(values)
+    assert value == values[0] and len(struct) == len(values) and compare_sequences(struct, values)

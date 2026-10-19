@@ -10,6 +10,7 @@ class Stack(LinkedList):
         new_head = Node(value)
         new_head.next = self._head
         self._head = new_head
+        self._length += 1
 
     def __raise_if_empty(self):
         if self.is_empty():
@@ -20,6 +21,7 @@ class Stack(LinkedList):
         self.__raise_if_empty()
         value = self._head.value
         self._head = self._head.next
+        self._length -= 1
         return value
 
     def peek(self) -> Any:

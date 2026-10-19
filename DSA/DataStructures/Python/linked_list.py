@@ -6,15 +6,15 @@ class LinkedList:
     """Represents a linked list"""
     def __init__(self, head: Node | None = None):
         self._head = head
+        self._length = self.__calculate_len(head)
 
-    @property
-    def length(self) -> int:
+    @staticmethod
+    def __calculate_len(head: Node| None) -> int:
         """Calculates and returns the length of the list"""
         leng = 0
-        node = self._head
-        while node:
+        while head:
             leng += 1
-            node = node.next
+            head = head.next
         return leng
 
     def push(self, value: Any):
@@ -22,11 +22,12 @@ class LinkedList:
         new_node = Node(value)
         if self.is_empty():
             self._head = new_node
-            return
-        tail = self._head
-        while tail.next:
-            tail = tail.next
-        tail.next = new_node
+        else:
+            tail = self._head
+            while tail.next:
+                tail = tail.next
+            tail.next = new_node
+        self._length += 1
 
     def is_empty(self):
         """Returns True if list is empty and False if not"""
@@ -43,7 +44,7 @@ class LinkedList:
         return result[:-4]
 
     def __len__(self):
-        return self.length
+        return self._length
 
     def __iter__(self):
         return ListIterator(self._head)
@@ -62,7 +63,7 @@ class LinkedList:
             raise NotImplementedError
 
         if idx < 0:
-            leng = self.length
+            leng = len(self)
             idx = leng + idx
             if idx < 0:
                 raise IndexError

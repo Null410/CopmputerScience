@@ -14,9 +14,10 @@ class Queue(LinkedList):
         node = Node(value)
         if self.is_empty():
             self._head = self._tail = node
-            return
-        self._tail.next = node
-        self._tail = self._tail.next
+        else:
+            self._tail.next = node
+            self._tail = self._tail.next
+        self._length += 1
 
     def __raise_if_empty(self):
         if self.is_empty():
@@ -29,6 +30,7 @@ class Queue(LinkedList):
         if self._tail is self._head:
             self._tail = None
         self._head = self._head.next
+        self._length -= 1
         return value
 
     def peek(self) -> Any:
