@@ -5,7 +5,7 @@ from node import Node
 class Stack(LinkedList):
     """Represents a stack"""
     @override
-    def push(self, value: Any):
+    def _push(self, value: Any):
         """Push a new value to the top of the stack"""
         new_head = Node(value)
         new_head.next = self._head
@@ -16,13 +16,23 @@ class Stack(LinkedList):
         if self.is_empty():
             raise IndexError("Stack is empty")
 
-    def pop(self) -> Any:
+    def _pop(self) -> Any:
         """Deletes and returns a value from the top of the stack"""
         self.__raise_if_empty()
         value = self._head.value
         self._head = self._head.next
         self._length -= 1
         return value
+
+    def pop(self) -> Any:
+        """Deletes and returns a value from the top of the stack. Thread-safe."""
+        with self._lock:
+            return self._pop()
+
+    async def pop_async(self) -> Any:
+        """Deletes and returns a value from the top of the stack. Asynchronous."""
+        async with self._async_lock:
+            return self._pop()
 
     def peek(self) -> Any:
         """Returns a value from the top of the stack"""

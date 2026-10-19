@@ -1,5 +1,7 @@
 from __future__ import annotations
 from typing import Any, overload
+import threading
+import asyncio
 from node import Node
 
 class LinkedList:
@@ -7,6 +9,8 @@ class LinkedList:
     def __init__(self, head: Node | None = None):
         self._head = head
         self._length = self.__calculate_len(head)
+        self._lock = threading.Lock()
+        self._async_lock = asyncio.Lock()
 
     @staticmethod
     def __calculate_len(head: Node| None) -> int:
@@ -17,7 +21,7 @@ class LinkedList:
             head = head.next
         return leng
 
-    def push(self, value: Any):
+    def _push(self, value: Any):
         """Push a new value to the end of the list"""
         new_node = Node(value)
         if self.is_empty():
@@ -28,6 +32,16 @@ class LinkedList:
                 tail = tail.next
             tail.next = new_node
         self._length += 1
+
+    def push(self, value: Any):
+        """Push a new value to the end of the list. Thread-safe."""
+        with self._lock:
+            self._push(value)
+
+    async def push_async(self, value: Any):
+        """Push a new value to the end of the list. Asynchronous."""
+        async with self._async_lock:
+            self._push(value)
 
     def is_empty(self):
         """Returns True if list is empty and False if not"""
