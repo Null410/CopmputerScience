@@ -1,8 +1,9 @@
 from typing import override, Any
 from linked_list import LinkedList
+from struct_interface import Struct
 from node import Node
 
-class Queue(LinkedList):
+class Queue(LinkedList, Struct):
     """Represents a queue"""
     def __init__(self):
         self._tail: Node = None

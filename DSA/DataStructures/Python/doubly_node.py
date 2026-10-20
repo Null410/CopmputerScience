@@ -27,5 +27,5 @@ class DoublyNode:
         """Returns a previous node"""
         return self._prev
     @prev.setter
-    def prec(self, prev_node: 'DoublyNode' | None):
+    def prev(self, prev_node: 'DoublyNode' | None):
         self._prev = prev_node

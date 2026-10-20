@@ -2,9 +2,10 @@ from __future__ import annotations
 from typing import Any, overload
 import threading
 import asyncio
+from struct_interface import BaseStruct
 from node import Node
 
-class LinkedList:
+class LinkedList(BaseStruct):
     """Represents a linked list"""
     def __init__(self, head: Node | None = None):
         self._head = head
@@ -47,18 +48,18 @@ class LinkedList:
         """Returns True if list is empty and False if not"""
         return self._head is None
 
+    def __len__(self):
+        return self._length
+
     def __str__(self):
+        result = f"[{len(self)}]: "
         if self.is_empty():
-            return "None"
-        result = ''
+            return result
         tmp = self._head
         while tmp:
             result += f"{tmp.value} -> "
             tmp = tmp.next
         return result[:-4]
-
-    def __len__(self):
-        return self._length
 
     def __iter__(self):
         return ListIterator(self._head)
