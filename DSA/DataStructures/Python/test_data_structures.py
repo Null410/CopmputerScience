@@ -1,11 +1,41 @@
 from itertools import product
 from collections.abc import Sequence
-from typing import Final, Callable
+from typing import TypeVar, Final, Callable, Iterable
 import pytest
+from struct_interface import BaseStruct, Struct
 from linked_list import LinkedList
 from linked_list_pro import LinkedListPro
 from stack import Stack
 from queue_ import Queue
+from deque_ import Deque
+
+def get_stack(arr: Iterable) -> Stack:
+    """
+    Returna a new stack from an iterable.
+    The order of thr elements is preserved.
+    Example:
+        Input: [1, 2, 3]
+        Output: 1 -> 2 -> 3
+    """
+    stack = Stack()
+    for a in arr[::-1]:
+        stack.push(a)
+    return stack
+
+BaseStructT = TypeVar('BaseStructT', bound=BaseStruct)
+
+def get_struct_from_iterable(arr: Iterable, struct_type: type[BaseStructT]) -> BaseStructT:
+    """Returna a new struct from an iterable."""
+    if struct_type is Stack:
+        return get_stack(arr)
+    struct = struct_type()
+    for a in arr:
+        struct.push(a)
+    return struct
+
+def get_default_struct(length: int, struct_type: type[BaseStructT]) -> BaseStructT:
+    """Return a default struct"""
+    return get_struct_from_iterable(range(length), struct_type)
 
 def compare_sequences(seq1: Sequence, seq2: Sequence):
     """Compare sequences"""
@@ -20,34 +50,78 @@ VALUES: Final = [
     [None]
 ]
 
-#LinkedList
+#LinkedList, Stack, Queue, Deque
 
-@pytest.mark.parametrize("values",
-    VALUES,
-    ids=[str(value) for value in VALUES])
-def test_list_push(values):
-    """Linked list PUSH tests"""
-    list_ = LinkedList()
-    for v in values:
-        list_.push(v)
-    assert compare_sequences(list_, values)
+BASE_STRUCT_TYPES: Final[type[BaseStruct]]= [
+    LinkedList,
+    Stack,
+    Queue,
+    Deque
+]
 
-def get_default_list(length: int) -> LinkedList:
-    """Return a default linked list"""
-    list_ = LinkedList()
-    for i in range(length):
-        list_.push(i)
-    return list_
+@pytest.mark.parametrize("values, struct_type",
+    list(product(VALUES,  BASE_STRUCT_TYPES)),
+    ids=[f"{s_type.__name__}_{value}" for value, s_type in product(VALUES,  BASE_STRUCT_TYPES)])
+def test_struct_push(values, struct_type):
+    """Struct PUSH tests"""
+    struct = get_struct_from_iterable(values, struct_type)
+    assert compare_sequences(struct, values)
 
-@pytest.mark.parametrize("length",[
+LENG: Final = [
     0,
     10
-],
-ids = ['0', '10'])
-def test_list_length(length):
-    """List length tests"""
-    list_ = get_default_list(length)
-    assert len(list_) == length
+]
+
+@pytest.mark.parametrize("length, struct_type",
+    list(product(LENG, BASE_STRUCT_TYPES)),
+    ids = [f"{s_type.__name__}_{leng}" for leng, s_type in product(LENG,  BASE_STRUCT_TYPES)])
+def test_struct_length(length, struct_type):
+    """Struct length tests"""
+    struct = get_default_struct(length, struct_type)
+    assert len(struct) == length
+
+#Stack, Queue, Deque
+
+STRUCT_TYPES: Final[type[Struct]] = [
+    Stack,
+    Queue,
+    Deque
+]
+
+@pytest.mark.parametrize("values, struct_type",
+    list(product(VALUES, STRUCT_TYPES)),
+    ids = [f"{s_type.__name__}_{value}" for value, s_type in product(VALUES, STRUCT_TYPES)])
+def test_struct_pop(values, struct_type: type[Struct]):
+    """Struct POP tests"""
+    struct = get_struct_from_iterable(values, struct_type)
+    value = struct.pop()
+    assert value == values[0] and len(struct) == len(values) - 1 and compare_sequences(struct, values[1:])
+
+@pytest.mark.parametrize("values, struct_type",
+    list(product(VALUES, STRUCT_TYPES)),
+    ids = [f"{s_type.__name__}_{value}" for value, s_type in product(VALUES, STRUCT_TYPES)])
+def test_struct_peek(values, struct_type: type[Struct]):
+    """Struct PEEK tests"""
+    struct = get_struct_from_iterable(values, struct_type)
+    value = struct.peek()
+    assert value == values[0] and len(struct) == len(values) and compare_sequences(struct, values)
+
+METHOD_NAMES: Final = [
+    Struct.peek.__name__,
+    Struct.pop.__name__
+]
+
+@pytest.mark.parametrize("struct_type , method_name",
+    list(product(STRUCT_TYPES, METHOD_NAMES)),
+    ids=[f"{s_type.__name__}_{method_name}" for s_type, method_name in product(STRUCT_TYPES, METHOD_NAMES)])
+def test_struct_pop_index_error(struct_type: type[Struct], method_name):
+    """Struct IndexError tests (pop, peek)"""
+    struct = struct_type()
+    method = getattr(struct, method_name)
+    with pytest.raises(IndexError):
+        _ = method()
+
+#LinkedList
 
 @pytest.mark.parametrize("length, idx",[
     (1, 0),
@@ -59,7 +133,7 @@ def test_list_length(length):
 ])
 def test_list_getitem(length, idx):
     """List __getitem__ tests"""
-    list_ = get_default_list(length)
+    list_ = get_default_struct(length, LinkedList)
     exp = list(range(length))
     assert list_[idx] == exp[idx]
 
@@ -71,7 +145,7 @@ def test_list_getitem(length, idx):
 ])
 def test_list_getitem_index_error(length, idx):
     """List __getitem__ IndexError tests"""
-    list_ = get_default_list(length)
+    list_ = get_default_struct(length, LinkedList)
     with pytest.raises(IndexError):
         _ = list_[idx]
 
@@ -139,88 +213,3 @@ def test_list_from_iter_values(args_with_expected, from_iter_func: Callable):
     expected = args_with_expected[1]
     list_: LinkedListPro = from_iter_func(*args)
     assert compare_sequences(list_, expected)
-
-#Stack
-
-@pytest.mark.parametrize("values", VALUES)
-def test_stack_push(values):
-    """Stack PUSH tests"""
-    stack = Stack()
-    for v in values:
-        stack.push(v)
-    assert compare_sequences(stack, values[::-1])
-
-@pytest.mark.parametrize("method", [
-    Stack.pop,
-    Stack.peek
-])
-def test_stack_pop_peek_index_error(method):
-    """Stack IndexError tests (pop, peek)"""
-    stack = Stack()
-    with pytest.raises(IndexError):
-        method(stack)
-
-#Queue
-
-@pytest.mark.parametrize("values", VALUES)
-def test_queue_push(values):
-    """Queue PUSH tests"""
-    queue = Queue()
-    for value in values:
-        queue.push(value)
-    assert compare_sequences(queue, values)
-
-@pytest.mark.parametrize("method", [
-    Queue.pop,
-    Queue.peek
-])
-def test_queue_pop_peek_index_error(method):
-    """Quequ IndexError tests (pop, peek)"""
-    queue = Queue()
-    with pytest.raises(IndexError):
-        method(queue)
-
-#Stack and Queue
-
-def get_stack(arr: list) -> Stack:
-    """
-    Returna a new stack from a list.
-    The order of thr elements is preserved.
-    Example:
-        Input: [1, 2, 3]
-        Output: 1 -> 2 -> 3
-    """
-    stack = Stack()
-    for a in arr[::-1]:
-        stack.push(a)
-    return stack
-
-def get_queue(arr: list) -> Stack:
-    """Returna a new queue from a list."""
-    queue = Queue()
-    for a in arr:
-        queue.push(a)
-    return queue
-
-GET_FUNCS = [
-    get_stack,
-    get_queue
-]
-
-@pytest.mark.parametrize("values, get_func",
-    list(product(VALUES, GET_FUNCS)),
-    ids = [f"{get_func.__name__}_{value}" for value, get_func in product(VALUES, GET_FUNCS)])
-def test_stask_queue_pop(values, get_func):
-    """Stack and Queue POP tests"""
-    struct = get_func(values)
-    value = struct.pop()
-    assert value == values[0] and len(struct) == len(values) - 1 and compare_sequences(struct, values[1:])
-
-@pytest.mark.parametrize("values, get_func",
-    list(product(VALUES, GET_FUNCS)),
-    ids = [f"{get_func.__name__}_{value}" for value, get_func in product(VALUES, GET_FUNCS)])
-def test_stask_queue_peek(values, get_func):
-    """Stack and Queue PEEK tests"""
-    struct = get_func(values)
-    value = struct.peek()
-    assert value == values[0] and len(struct) == len(values) and compare_sequences(struct, values)
