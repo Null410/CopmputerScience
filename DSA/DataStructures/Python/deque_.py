@@ -84,3 +84,9 @@ class Deque(Struct):
 
     def __iter__(self):
         return ListIterator(self._head)
+
+    def __reversed__(self):
+        node = self._tail
+        while node:
+            yield node.value
+            node = node.prev

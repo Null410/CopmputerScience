@@ -165,13 +165,15 @@ def test_list_from_values(args):
     list_ = LinkedListPro.from_values(*args)
     assert compare_sequences(list_, args)
 
-@pytest.mark.parametrize("iterable", [
+ITERABLE_VALUES: Final = [
     [],
     [1, 2 , 3],
     [1, [2, 3]],
     (1, "2", [2, 3]),
     "12345"
-])
+]
+
+@pytest.mark.parametrize("iterable", ITERABLE_VALUES)
 def test_list_from_iterable(iterable):
     """Tests for creating a list from iterable"""
     list_ = LinkedListPro.from_iterable(iterable)
@@ -213,3 +215,12 @@ def test_list_from_iter_values(args_with_expected, from_iter_func: Callable):
     expected = args_with_expected[1]
     list_: LinkedListPro = from_iter_func(*args)
     assert compare_sequences(list_, expected)
+
+#Deque
+
+@pytest.mark.parametrize("values", ITERABLE_VALUES,
+    ids = str)
+def test_deque_reversed(values):
+    """Tests for Qeque __reversed__"""
+    deque = get_struct_from_iterable(values, Deque)
+    assert all(d == v for d, v in zip(reversed(deque), reversed(values)))
