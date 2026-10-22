@@ -2,6 +2,7 @@
 *.bkp
 *.dtmp
 *.vscode
+*_tmp.*
 
 ##########
 # Python #

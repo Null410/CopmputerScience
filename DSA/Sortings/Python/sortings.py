@@ -1,11 +1,14 @@
-from collections.abc import Iterable, Callable
+from collections.abc import Iterable
 from typing import Protocol, TypeVar
 
-def Comparable(Protocol):
-    #def __eq__(self, other) -> bool: ...
-    def __lt__(self, other) -> bool: ...
-    def __le__(self, other) -> bool: ...
-    def __gt__(self, other) -> bool: ...
+class Comparable(Protocol):
+    """Comparable Protocol"""
+    def __lt__(self, other) -> bool:
+        pass
+    def __le__(self, other) -> bool:
+        pass
+    def __gt__(self, other) -> bool:
+        pass
 
 T = TypeVar('T', bound = Comparable)
 
