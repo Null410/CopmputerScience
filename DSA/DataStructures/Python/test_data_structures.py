@@ -1,6 +1,7 @@
 from itertools import product
 from collections.abc import Sequence
 from typing import TypeVar, Final, Callable, Iterable
+import random
 import pytest
 from struct_interface import BaseStruct, Struct
 from linked_list import LinkedList
@@ -8,6 +9,7 @@ from linked_list_pro import LinkedListPro
 from stack import Stack
 from queue_ import Queue
 from deque_ import Deque
+from bitree import BiTree
 
 def get_stack(arr: Iterable) -> Stack:
     """
@@ -224,3 +226,78 @@ def test_deque_reversed(values):
     """Tests for Qeque __reversed__"""
     deque = get_struct_from_iterable(values, Deque)
     assert all(d == v for d, v in zip(reversed(deque), reversed(values)))
+
+#BiTree
+
+def get_bitree(values: Iterable, cls: type = int):
+    """Returns a new BiTree of values"""
+    tree = BiTree()
+    for v in values:
+        tree.insert(cls(v))
+    return tree
+
+class KeyTest:
+    """Represents a key suitable for the tree key protocol"""
+    def __init__(self, value):
+        self._value = value
+
+    def __eq__(self, other):
+        if isinstance(other, KeyTest):
+            return self._value == other._value
+        return self._value == other
+    def __gt__(self, other):
+        if isinstance(other, KeyTest):
+            return self._value > other._value
+        return self._value > other
+
+    def __mul__(self, other):
+        if isinstance(other, KeyTest):
+            return KeyTest(self._value * other._value)
+        return KeyTest(self._value * other)
+    def __str__(self):
+        return f"{KeyTest.__name__}({self._value})"
+
+@pytest.mark.parametrize("key", [
+    1,
+    1.0,
+    "key",
+    [],
+    [1],
+    (1, 2),
+    KeyTest(1)
+],
+ids=type)
+def test_bitree_insert_keys_type(key):
+    """Tests BiTree keys type (when insert)"""
+    tree = BiTree()
+    tree.insert(key)
+    tree.insert(key)
+    tree.insert(key * 2)
+    assert tree.count == 3
+
+@pytest.mark.parametrize("cls",[
+    int,
+    float,
+    str,
+    KeyTest
+],
+ids=lambda x: x.__name__)
+def test_bitree_find(cls):
+    """Test BiTree (not) find"""
+    n = 10
+    list_ = list(range(n))
+    random.shuffle(list_)
+    tree = get_bitree(list_, cls)
+    assert tree.find(cls(n // 2)) and not tree.find(cls(n * 2))
+
+TREE_VALUES_DFS: Final = [
+    ([], []),
+    ([5, 3, 2, 4, 8, 10], [5, 3, 2, 4, 8, 10]),
+    ([10, 15, 4, 11], [10, 4, 15, 11])
+]
+
+@pytest.mark.parametrize("values, dfs", TREE_VALUES_DFS, ids=str)
+def test_bitree_dfs(values, dfs):
+    """Tests Bitree DFS (preorder, recursive)"""
+    tree = get_bitree(values, int)
+    assert all(tree_dfs == exp_dfs for tree_dfs, exp_dfs in zip(tree.dfs_rec, dfs))
