@@ -11,7 +11,7 @@ class Key(Protocol):
 TreeKey = TypeVar('TreeKey', bound=Key)
 
 class BiTreeNode:
-    """Represents a node of a binary tree with immutable key"""
+    """Represents a node of a binary tree with a key"""
     __slots__ = ('_key', '_left', '_right')
     def __init__(self, key: TreeKey):
         self._key = key
@@ -20,6 +20,9 @@ class BiTreeNode:
     def key(self):
         """Returns the key"""
         return self._key
+    @key.setter
+    def key(self, key: TreeKey):
+        self._key = key
     @property
     def left(self):
         """Returns the left node"""

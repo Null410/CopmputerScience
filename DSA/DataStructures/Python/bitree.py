@@ -1,5 +1,6 @@
 from typing import Generator
 from bitree_node import BiTreeNode, TreeKey
+from queue_ import Queue
 
 class BiTree:
     """Represents a binary tree"""
@@ -58,3 +59,21 @@ class BiTree:
             yield from preorder(node.left)
             yield from preorder(node.right)
         yield from preorder(self._root)
+
+    @property
+    def bfs(self) -> Generator[TreeKey, None, None]:
+        """Returns a generator for BFS"""
+        if self.is_empty():
+            return
+        parent_ = Queue()
+        parent_.push(self._root)
+        child_ = Queue()
+        while not parent_.is_empty():
+            node: BiTreeNode = parent_.pop()
+            if node.left:
+                child_.push(node.left)
+            if node.right:
+                child_.push(node.right)
+            yield node.key
+            if parent_.is_empty():
+                parent_, child_ = child_, parent_

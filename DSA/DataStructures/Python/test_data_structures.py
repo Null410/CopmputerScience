@@ -301,3 +301,14 @@ def test_bitree_dfs(values, dfs):
     """Tests Bitree DFS (preorder, recursive)"""
     tree = get_bitree(values, int)
     assert all(tree_dfs == exp_dfs for tree_dfs, exp_dfs in zip(tree.dfs_rec, dfs))
+
+TREE_VALUES_BFS: Final = [
+    ([], []),
+    ([5, 3, 2, 4, 8, 10, 7], [5, 3, 8, 2, 4, 7, 10]),
+    ([10, 15, 4, 11, 3, 16], [10, 4, 15, 3, 11, 16])
+]
+@pytest.mark.parametrize("values, bfs", TREE_VALUES_BFS, ids=str)
+def test_bitree_bfs(values, bfs):
+    """Tests Bitree BFS"""
+    tree = get_bitree(values, int)
+    assert all(tree_bfs == exp_bfs for tree_bfs, exp_bfs in zip(tree.bfs, bfs))
