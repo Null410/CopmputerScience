@@ -45,9 +45,43 @@ class BiTree:
                 node = node.left
         return False
 
+    @staticmethod
+    def __find_min(node: BiTreeNode) -> BiTreeNode:
+        min_node = None
+        while node:
+            min_node = node
+            node = node.left
+        return min_node
+
     def delete(self, key: TreeKey):
-        """Deletes a node with the specified key from the tree"""
-        raise NotImplementedError
+        """Deletes a node with the specified key from the tree (the first one finded)"""
+        def delete_node(node: BiTreeNode, key: TreeKey):
+            find_node = False
+            if node is None:
+                return find_node, None
+            if key == node.key:
+                find_node = True
+                no_l = node.left is None
+                no_r = node.right is None
+                if no_l and no_r:
+                    return find_node, None
+                if no_l:
+                    return find_node, node.right
+                if no_r:
+                    return find_node, node.left
+                min_right_node = BiTree.__find_min(node.right)
+                node.key = min_right_node.key
+                _, node.right = delete_node(node.right, min_right_node.key)
+            elif key > node.key:
+                find_node, node.right = delete_node(node.right, key)
+            else:
+                find_node, node.left = delete_node(node.left, key)
+            return find_node, node
+
+        find_node, self._root = delete_node(self._root, key)
+        if find_node:
+            self._count -= 1
+        return find_node
 
     @property
     def dfs_rec(self) -> Generator[TreeKey, None, None]:

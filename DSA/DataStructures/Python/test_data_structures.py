@@ -312,3 +312,32 @@ def test_bitree_bfs(values, bfs):
     """Tests Bitree BFS"""
     tree = get_bitree(values, int)
     assert all(tree_bfs == exp_bfs for tree_bfs, exp_bfs in zip(tree.bfs, bfs))
+
+@pytest.mark.parametrize("values, del_values, result_bfs", [
+    ([], [0], []),
+    ([3, 2, 4], [3], [4, 2]),
+    ([3, 2, 2, 4, 4], [2, 4], [3, 2, 4]),
+    ([5, 3, 7, 4, 6], [3, 7], [5, 4, 6]),
+    ([0], [0], []),
+    ([0, -1, 1], [0, -1, 1], []),
+    ([3, 1, 1, 5, 5, 4, 3], [1, 3, 5], [4, 3, 5, 1]),
+    ([3, 2, 4], [1, -1], [3, 2, 4]),
+    ([5, 3, 2, 4, 8, 10, 7], [3, 8], [5, 4, 10, 2, 7])
+],
+ids = [
+    "when_empty",
+    "when_root",
+    "when_leaf",
+    "when_one_child",
+    "when_only_one",
+    "delete_all",
+    "duplicate_keys",
+    "when_is_missing",
+    "common"
+])
+def test_bitree_delete(values, del_values, result_bfs):
+    """Tests BiTree delete"""
+    tree = get_bitree(values, int)
+    for dv in del_values:
+        tree.delete(dv)
+    assert tree.count == len(result_bfs) and all(tree_bfs == exp_bfs for tree_bfs, exp_bfs in zip(tree.bfs, result_bfs))
