@@ -1,6 +1,6 @@
 from typing import Iterable
 from linked_list import LinkedList
-from node import Node
+from nodes.node import Node
 #from warnings import deprecated
 
 class LinkedListPro(LinkedList):

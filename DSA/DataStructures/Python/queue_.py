@@ -1,7 +1,7 @@
 from typing import override, Any
 from linked_list import LinkedList
 from struct_interface import Struct
-from node import Node
+from nodes.node import Node
 
 class Queue(LinkedList, Struct):
     """Represents a queue"""

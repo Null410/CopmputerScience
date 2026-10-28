@@ -1,7 +1,7 @@
 from typing import override, Any
 from linked_list import LinkedList
 from struct_interface import Struct
-from node import Node
+from nodes.node import Node
 
 class Stack(LinkedList, Struct):
     """Represents a stack"""

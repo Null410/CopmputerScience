@@ -1,5 +1,5 @@
 from typing import Generator
-from bitree_node import BiTreeNode, TreeKey
+from nodes.bitree_node import BiTreeNode, TreeKey
 from queue_ import Queue
 
 class BiTree:

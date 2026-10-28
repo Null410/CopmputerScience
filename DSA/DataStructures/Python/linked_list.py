@@ -3,7 +3,7 @@ from typing import Any, overload
 import threading
 import asyncio
 from struct_interface import BaseStruct
-from node import Node
+from nodes.node import Node
 
 class LinkedList(BaseStruct):
     """Represents a linked list"""
