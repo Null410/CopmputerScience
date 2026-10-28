@@ -53,6 +53,23 @@ class BiTree:
             node = node.left
         return min_node
 
+    def __raise_if_empty(self):
+        if self.is_empty():
+            raise IndexError("BiTree is empty")
+
+    def min(self) -> TreeKey:
+        """Returns the minimum key"""
+        self.__raise_if_empty()
+        return BiTree.__find_min(self._root).key
+
+    def max(self) -> TreeKey:
+        """Returns the maximum key"""
+        self.__raise_if_empty()
+        node = self._root
+        while node.right:
+            node = node.right
+        return node.key
+
     def delete(self, key: TreeKey):
         """Deletes a node with the specified key from the tree (the first one finded)"""
         def delete_node(node: BiTreeNode, key: TreeKey):

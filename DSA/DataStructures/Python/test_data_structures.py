@@ -341,3 +341,31 @@ def test_bitree_delete(values, del_values, result_bfs):
     for dv in del_values:
         tree.delete(dv)
     assert tree.count == len(result_bfs) and all(tree_bfs == exp_bfs for tree_bfs, exp_bfs in zip(tree.bfs, result_bfs))
+
+@pytest.mark.parametrize("values, func",
+    list(product([
+        [1],
+        [2, 1, 3],
+        [5, 4, 6, 3, 5, 6, 7],
+        [1, 2, 3],
+        [3, 2, 1]
+    ],[
+        BiTree.min,
+        BiTree.max
+    ])),
+    ids=lambda x: x.__name__ if isinstance(x, Callable) else str(x))
+def test_bitree_min(values, func):
+    """Tests BiTree min/max"""
+    tree = get_bitree(values)
+    exp_func = min if func is BiTree.min else max
+    assert func(tree) == exp_func(values)
+
+@pytest.mark.parametrize("func",[
+    BiTree.min,
+    BiTree.max
+])
+def test_bitree_index_error(func):
+    """Tests BiTree IndexError"""
+    tree = BiTree()
+    with pytest.raises(IndexError):
+        func(tree)
