@@ -283,7 +283,7 @@ def test_bitree_insert_keys_type(key):
 ],
 ids=lambda x: x.__name__)
 def test_bitree_find(cls):
-    """Test BiTree (not) find"""
+    """Test BiTree: (not) find"""
     n = 10
     list_ = list(range(n))
     random.shuffle(list_)
@@ -298,7 +298,7 @@ TREE_VALUES_DFS: Final = [
 
 @pytest.mark.parametrize("values, dfs", TREE_VALUES_DFS, ids=str)
 def test_bitree_dfs(values, dfs):
-    """Tests Bitree DFS (preorder, recursive)"""
+    """Tests Bitree: DFS (preorder, recursive)"""
     tree = get_bitree(values, int)
     assert all(tree_dfs == exp_dfs for tree_dfs, exp_dfs in zip(tree.dfs_rec, dfs))
 
@@ -309,7 +309,7 @@ TREE_VALUES_BFS: Final = [
 ]
 @pytest.mark.parametrize("values, bfs", TREE_VALUES_BFS, ids=str)
 def test_bitree_bfs(values, bfs):
-    """Tests Bitree BFS"""
+    """Tests Bitree: BFS"""
     tree = get_bitree(values, int)
     assert all(tree_bfs == exp_bfs for tree_bfs, exp_bfs in zip(tree.bfs, bfs))
 
@@ -336,7 +336,7 @@ ids = [
     "common"
 ])
 def test_bitree_delete(values, del_values, result_bfs):
-    """Tests BiTree delete"""
+    """Tests BiTree: delete"""
     tree = get_bitree(values, int)
     for dv in del_values:
         tree.delete(dv)
@@ -350,22 +350,54 @@ def test_bitree_delete(values, del_values, result_bfs):
         [1, 2, 3],
         [3, 2, 1]
     ],[
-        BiTree.min,
-        BiTree.max
+        BiTree.get_min,
+        BiTree.get_max
     ])),
     ids=lambda x: x.__name__ if isinstance(x, Callable) else str(x))
 def test_bitree_min(values, func):
-    """Tests BiTree min/max"""
+    """Tests BiTree: min/max"""
     tree = get_bitree(values)
-    exp_func = min if func is BiTree.min else max
+    exp_func = min if func is BiTree.get_min else max
     assert func(tree) == exp_func(values)
 
 @pytest.mark.parametrize("func",[
-    BiTree.min,
-    BiTree.max
+    BiTree.get_min,
+    BiTree.get_max
 ])
 def test_bitree_index_error(func):
-    """Tests BiTree IndexError"""
+    """Tests BiTree: IndexError"""
     tree = BiTree()
     with pytest.raises(IndexError):
         func(tree)
+
+@pytest.mark.parametrize("values, key, depth",[
+    ([], 0, -1),
+    ([0], 1, -1),
+    ([0], 0, 0),
+    ([2, 1, 3], 3, 1),
+    ([2, 1, 3, 0], 0 , 2)
+],
+ids = [
+    "empty_tree_(-1)",
+    "only_root_(-1)",
+    "only_root_(0)",
+    "left_(1)",
+    "right_(2)"
+])
+def test_bitree_key_depth(values, key, depth):
+    """Tests BiTree: key depth"""
+    tree = get_bitree(values)
+    assert tree.get_key_depth(key) == depth
+
+@pytest.mark.parametrize("values, depth", [
+    ([], -1),
+    ([0], 0),
+    ([2, 1, 3], 1),
+    ([2, 1, 3, 0, -1], 3),
+    ([2, 1, 5, 6], 2)
+],
+ids = lambda x: f"({x})" if isinstance(x, int) else str(x))
+def test_bitree_depth_rec(values, depth):
+    """Tests BiTree depth (recursive)"""
+    tree = get_bitree(values)
+    assert tree.get_depth_rec() == depth

@@ -53,23 +53,6 @@ class BiTree:
             node = node.left
         return min_node
 
-    def __raise_if_empty(self):
-        if self.is_empty():
-            raise IndexError("BiTree is empty")
-
-    def min(self) -> TreeKey:
-        """Returns the minimum key"""
-        self.__raise_if_empty()
-        return BiTree.__find_min(self._root).key
-
-    def max(self) -> TreeKey:
-        """Returns the maximum key"""
-        self.__raise_if_empty()
-        node = self._root
-        while node.right:
-            node = node.right
-        return node.key
-
     def delete(self, key: TreeKey):
         """Deletes a node with the specified key from the tree (the first one finded)"""
         def delete_node(node: BiTreeNode, key: TreeKey):
@@ -128,3 +111,46 @@ class BiTree:
             yield node.key
             if parent_.is_empty():
                 parent_, child_ = child_, parent_
+
+    def __raise_if_empty(self):
+        if self.is_empty():
+            raise IndexError("BiTree is empty")
+
+    def get_min(self) -> TreeKey:
+        """Returns the minimum key"""
+        self.__raise_if_empty()
+        return BiTree.__find_min(self._root).key
+
+    def get_max(self) -> TreeKey:
+        """Returns the maximum key"""
+        self.__raise_if_empty()
+        node = self._root
+        while node.right:
+            node = node.right
+        return node.key
+
+    def get_key_depth(self, key: TreeKey) -> int:
+        """
+        Returns the key depth (the first one found).
+        The root depth is 0.
+        If the key is not found, returns -1.
+        """
+        depth = -1
+        node = self._root
+        while node:
+            depth += 1
+            if key == node.key:
+                return depth
+            node = node.right if key > node.key else node.left
+        return -1
+
+    def get_depth_rec(self) -> int:
+        """
+        Returns the tree depth (recursive).
+        If the tree is empty, returns -1.
+        """
+        def get_depth(node:BiTreeNode) -> int:
+            if node is None:
+                return -1
+            return 1 + max(get_depth(node.left), get_depth(node.right))
+        return get_depth(self._root)
