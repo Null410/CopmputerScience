@@ -375,14 +375,16 @@ def test_bitree_index_error(func):
     ([0], 1, -1),
     ([0], 0, 0),
     ([2, 1, 3], 3, 1),
-    ([2, 1, 3, 0], 0 , 2)
+    ([2, 1, 3, 0], 0 , 2),
+    ([2, 1, 3, 0, 0, 0], 0, 2)
 ],
 ids = [
     "empty_tree_(-1)",
     "only_root_(-1)",
     "only_root_(0)",
     "left_(1)",
-    "right_(2)"
+    "right_(2)",
+    "several (2)"
 ])
 def test_bitree_key_depth(values, key, depth):
     """Tests BiTree: key depth"""
@@ -401,3 +403,23 @@ def test_bitree_depth_rec(values, depth):
     """Tests BiTree depth (recursive)"""
     tree = get_bitree(values)
     assert tree.get_depth_rec() == depth
+
+@pytest.mark.parametrize("values, key",[
+    ([], 1),
+    ([0], 1),
+    ([2, 1, 3], 2),
+    ([2, 3, 2, 2], 2),
+    ([6, 5, 4, 6], 6),
+    ([6, 5, 5, 3, 5, 5, 4, 5, 6], 5)
+], ids = [
+    "empty_tree",
+    "not_found",
+    "only_root",
+    "several_in_a_row",
+    "several_not_in_a_row",
+    "several_special"
+])
+def test_bitree_key_count(values: list, key):
+    """Tests BiTree: key count"""
+    tree = get_bitree(values)
+    assert tree.get_key_count(key) == values.count(key)

@@ -154,3 +154,23 @@ class BiTree:
                 return -1
             return 1 + max(get_depth(node.left), get_depth(node.right))
         return get_depth(self._root)
+
+    @staticmethod
+    def __find_node(root: BiTreeNode, key: TreeKey) -> BiTreeNode:
+        while root:
+            if key == root.key:
+                return root
+            root = root.right if key > root.key else root.left
+        return None
+
+    def get_key_count(self, key: TreeKey):
+        """Returns the key count"""
+        count = 0
+        node = self._root
+        while node:
+            node = BiTree.__find_node(node, key)
+            if node is None:
+                break
+            count += 1
+            node = node.left
+        return count
