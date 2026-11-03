@@ -1,5 +1,5 @@
 from nodes.bitree_node import BiTreeNode, TreeKey
-from base_tree import BaseTree
+from trees.base_tree import BaseTree
 
 class BiTree(BaseTree):
     """Represents a binary tree with extra methods"""

@@ -1,5 +1,5 @@
 from typing import Any
-from base_tree import BaseTree
+from trees.base_tree import BaseTree
 from nodes.bitree_node import TreeKey
 from nodes.bitree_val_node import BiTreeValNode
 

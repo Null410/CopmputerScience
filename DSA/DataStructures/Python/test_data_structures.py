@@ -9,7 +9,7 @@ from linked_list_pro import LinkedListPro
 from stack import Stack
 from queue_ import Queue
 from deque_ import Deque
-from bitree import BiTree
+from trees.bitree import BiTree
 
 def get_stack(arr: Iterable) -> Stack:
     """
