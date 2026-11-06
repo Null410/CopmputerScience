@@ -21,5 +21,35 @@
             }
             return arr;
         }
+        
+        public static T[] CocktailSort<T>(this IEnumerable<T> enumerable) where T: IComparable<T>
+        {
+            T[] arr = enumerable.ToArray();
+            int left = 0;
+            int right = arr.Length - 1;
+            while (left < right)
+            {
+                int border = left; // or = 0;
+                for (int i = left; i < right; i++)
+                {
+                    if (arr[i].CompareTo(arr[i + 1]) > 0)
+                    {
+                        (arr[i], arr[i + 1]) = (arr[i + 1], arr[i]);
+                        border = i;
+                    }
+                }
+                right = border;
+                for (int i = right; i > left; i--)
+                {
+                    if (arr[i - 1].CompareTo(arr[i]) > 0)
+                    {
+                        (arr[i], arr[i - 1]) = (arr[i - 1], arr[i]);
+                        border = i;
+                    }
+                }
+                left = border;
+            }
+            return arr;
+        }
     }
 }
