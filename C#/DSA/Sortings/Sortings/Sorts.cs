@@ -51,5 +51,22 @@
             }
             return arr;
         }
+
+        public static T[] InsertionSort<T>(this IEnumerable<T> enumerable) where T : IComparable<T>
+        {
+            T[] arr = enumerable.ToArray();
+            for (int i = 1; i < arr.Length; i++)
+            {
+                var item = arr[i];
+                int j = i - 1;
+                while (j >= 0 && arr[j].CompareTo(item) > 0)
+                {
+                    arr[j + 1] = arr[j];
+                    j--;
+                }
+                arr[j + 1] = item;
+            }
+            return arr;
+        }
     }
 }
