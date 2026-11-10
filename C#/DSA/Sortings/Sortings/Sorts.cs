@@ -89,5 +89,23 @@
             }
             return arr;
         }
+
+        public static T[] SelectionSort<T>(this IEnumerable<T> enumerable) where T : IComparable<T>
+        {
+            T[] arr = [..enumerable];
+            for (int i = 0; i < arr.Length; i++)
+            {
+                int min_idx = i;
+                for (int j = i + 1; j < arr.Length; j++)
+                {
+                    if (arr[min_idx].CompareTo(arr[j]) > 0)
+                    {
+                        min_idx = j;
+                    }
+                }
+                (arr[i], arr[min_idx]) = (arr[min_idx], arr[i]);
+            }
+            return arr;
+        }
     }
 }

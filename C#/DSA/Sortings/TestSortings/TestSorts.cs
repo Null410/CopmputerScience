@@ -9,7 +9,8 @@ namespace TestSortings
             Sorts.BubbleSort,
             Sorts.CocktailSort,
             Sorts.InsertionSort,
-            Sorts.DwarfSort
+            Sorts.DwarfSort,
+            Sorts.SelectionSort
         ];
         public static TheoryData<Func<IEnumerable<int>, int[]>, int> TestData = 
             ((Func<TheoryData<Func<IEnumerable<int>, int[]>, int>>)(() =>
