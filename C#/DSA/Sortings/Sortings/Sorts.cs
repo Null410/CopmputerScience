@@ -4,7 +4,7 @@
     {
         public static T[] BubbleSort<T>(this IEnumerable<T> enumerable) where T : IComparable<T>
         {
-            T[] arr = enumerable.ToArray();
+            T[] arr = [.. enumerable];
             int n = arr.Length;
             while (n > 1)
             {
@@ -24,7 +24,7 @@
         
         public static T[] CocktailSort<T>(this IEnumerable<T> enumerable) where T: IComparable<T>
         {
-            T[] arr = enumerable.ToArray();
+            T[] arr = [.. enumerable];
             int left = 0;
             int right = arr.Length - 1;
             while (left < right)
@@ -54,7 +54,7 @@
 
         public static T[] InsertionSort<T>(this IEnumerable<T> enumerable) where T : IComparable<T>
         {
-            T[] arr = enumerable.ToArray();
+            T[] arr = [.. enumerable];
             for (int i = 1; i < arr.Length; i++)
             {
                 var item = arr[i];
@@ -65,6 +65,27 @@
                     j--;
                 }
                 arr[j + 1] = item;
+            }
+            return arr;
+        }
+
+        public static T[] DwarfSort<T>(this IEnumerable<T> enumerable) where T : IComparable<T>
+        {
+            T[] arr = [.. enumerable];
+            int i = 1;
+            int j = i + 1;
+            while (i < arr.Length)
+            {
+                if (i == 0 || arr[i].CompareTo(arr[i - 1]) >= 0)
+                {
+                    i = j;
+                    ++j;
+                }
+                else
+                {
+                    (arr[i], arr[i - 1]) = (arr[i - 1], arr[i]);
+                    --i;
+                }
             }
             return arr;
         }

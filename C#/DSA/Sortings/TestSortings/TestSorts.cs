@@ -8,7 +8,8 @@ namespace TestSortings
         static readonly IEnumerable<Func<IEnumerable<int>, int[]>> sortFuncs = [
             Sorts.BubbleSort,
             Sorts.CocktailSort,
-            Sorts.InsertionSort
+            Sorts.InsertionSort,
+            Sorts.DwarfSort
         ];
         public static TheoryData<Func<IEnumerable<int>, int[]>, int> TestData = 
             ((Func<TheoryData<Func<IEnumerable<int>, int[]>, int>>)(() =>
