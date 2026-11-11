@@ -107,5 +107,89 @@
             }
             return arr;
         }
+
+        private static void quickHoare<T>(T[] arr, int l, int r) where T : IComparable<T>
+        {
+            Func<T[], int, int, int> partition = (arr, l, r) =>
+            {
+                T pivot = arr[(r + l) / 2];
+                int i = l;
+                int j = r;
+                while (i <= j)
+                {
+                    while (arr[i].CompareTo(pivot) < 0)
+                    {
+                        ++i;
+                    }
+                    while (arr[j].CompareTo(pivot) > 0)
+                    {
+                        --j;
+                    }
+                    if (i >= j)
+                    {
+                        break;
+                    }
+                    (arr[i], arr[j]) = (arr[j], arr[i]);
+                    ++i;
+                    --j;
+                }
+                return j;
+            };
+
+            if (l >= r) return;
+            int p = partition(arr, l, r);
+            quickHoare(arr, l, p);
+            quickHoare(arr, p + 1, r);
+        }
+
+        /// <summary>
+        /// Quick sort (Hoare scheme, by last).
+        /// </summary>
+        /// <typeparam name="T">IComparable</typeparam>
+        /// <param name="enumerable">IEnumerable</param>
+        /// <returns>A new sorted array T[]</returns>
+        public static T[] QuickSortHoare<T>(this IEnumerable<T> enumerable) where T : IComparable<T>
+        {
+            T[] arr = [.. enumerable];
+            quickHoare(arr, 0, arr.Length - 1);
+            return arr;
+        }
+
+        private static void quickLomuto<T>(T[] arr, int l, int r) where T : IComparable<T>
+        {
+            Func<T[], int, int, int> partition = (arr, l, r) =>
+            {
+                T pivot = arr[r];
+                int p = l - 1;
+                for (int i = l; i < r; i++)
+                {
+                    if (arr[i].CompareTo(pivot) <= 0)
+                    {
+                        ++p;
+                        (arr[i], arr[p]) = (arr[p], arr[i]);
+                    }
+                }
+                ++p;
+                (arr[p], arr[r]) = (arr[r], arr[p]);
+                return p;
+            };
+            if (l >= r) return;
+            int p = partition(arr, l, r);
+            quickLomuto(arr, l, p - 1);
+            quickLomuto(arr, p + 1, r);
+        }
+
+        /// <summary>
+        /// Quick sort (Lomuto scheme, by last).
+        /// </summary>
+        /// <typeparam name="T">IComparable</typeparam>
+        /// <param name="enumerable">IEnumerable</param>
+        /// <returns>A new sorted array T[]</returns>
+        public static T[] QuickSortLomuto<T>(this IEnumerable<T> enumerable) where T : IComparable<T>
+        {
+            T[] arr = [.. enumerable];
+            quickLomuto(arr, 0, arr.Length - 1);
+            return arr;
+        }
     }
 }
