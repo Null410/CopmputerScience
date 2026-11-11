@@ -99,8 +99,8 @@ def selection_sort(iterable: Iterable[T]) -> list[T]:
         arr[i], arr[min_idx] = arr[min_idx], arr[i]
     return arr
 
-def quick_sort(iterable: Iterable[T]) -> list[T]:
-    """Quick sort. Returns a new sorted list[T]."""
+def quick_sort_hoare(iterable: Iterable[T]) -> list[T]:
+    """Quick sort (Hoare scheme). Returns a new sorted list[T]."""
     arr: list[T] = list(iterable)
 
     def partition(arr: list[T], l: int, r: int) -> int:
@@ -128,8 +128,8 @@ def quick_sort(iterable: Iterable[T]) -> list[T]:
     quick(arr, 0, len(arr) - 1)
     return arr
 
-def quick_sort_by_first(iterable: Iterable[T]) -> list[T]:
-    """Quick sort. Returns a new sorted list[T]."""
+def quick_sort_lomuto(iterable: Iterable[T]) -> list[T]:
+    """Quick sort (Lomuto scheme, by first). Returns a new sorted list[T]."""
     arr: list[T] = list(iterable)
 
     def partition(arr: list[T], l: int, r: int) -> int:
