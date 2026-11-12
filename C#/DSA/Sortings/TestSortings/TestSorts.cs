@@ -5,7 +5,7 @@ namespace TestSortings
     public class TestSorts
     {
         static readonly int[] lens = [0, 1, 2, 100];
-        static readonly IEnumerable<Func<IEnumerable<int>, int[]>> sortFuncs = [
+        public static readonly TheoryData<Func<IEnumerable<int>, int[]>> SortFuncs = [
             Sorts.BubbleSort,
             Sorts.CocktailSort,
             Sorts.InsertionSort,
@@ -14,11 +14,11 @@ namespace TestSortings
             Sorts.QuickSortHoare,
             Sorts.QuickSortLomuto
         ];
-        public static TheoryData<Func<IEnumerable<int>, int[]>, int> TestData = 
+        public static readonly TheoryData<Func<IEnumerable<int>, int[]>, int> TestData = 
             ((Func<TheoryData<Func<IEnumerable<int>, int[]>, int>>)(() =>
             {
                 var data = new TheoryData<Func<IEnumerable<int>, int[]>, int>();
-                foreach (var func in sortFuncs)
+                foreach (var func in SortFuncs)
                 {
                     foreach (var len in lens)
                     {
@@ -56,11 +56,30 @@ namespace TestSortings
 
         [Theory]
         [MemberData(nameof(TestData))]
-        public void TestSort(Func<IEnumerable<int>, int[]> sortFunc, int length)
+        public void TestUnsorted(Func<IEnumerable<int>, int[]> sortFunc, int length)
         {
             int[] arr = getUnsortedRand(length);
             int[] result = sortFunc(arr);
             Assert.True(isSorted(result));
+        }
+
+        [Theory]
+        [MemberData(nameof(SortFuncs))]
+        public void TestSorted(Func<IEnumerable<int>, int[]> sortFunc)
+        {
+            int n = 100;
+            int[] arr = [.. Enumerable.Range(0, n)];
+            Assert.True(isSorted(sortFunc(arr)));
+        }
+
+        [Theory]
+        [MemberData(nameof(SortFuncs))]
+        public void TestEqual(Func<IEnumerable<int>, int[]> sortFunc)
+        {
+            int value = 5;
+            int n = 100;
+            int[] arr = [.. Enumerable.Repeat(value, n)];
+            Assert.True(isSorted(sortFunc(arr)));
         }
     }
 }
