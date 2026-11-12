@@ -110,7 +110,7 @@
 
         private static void quickHoare<T>(T[] arr, int l, int r) where T : IComparable<T>
         {
-            Func<T[], int, int, int> partition = (arr, l, r) =>
+            static int partition(T[] arr, int l, int r)
             {
                 T pivot = arr[(r + l) / 2];
                 int i = l;
@@ -134,7 +134,7 @@
                     --j;
                 }
                 return j;
-            };
+            }
 
             if (l >= r) return;
             int p = partition(arr, l, r);
@@ -157,7 +157,7 @@
 
         private static void quickLomuto<T>(T[] arr, int l, int r) where T : IComparable<T>
         {
-            Func<T[], int, int, int> partition = (arr, l, r) =>
+            static int partition(T[] arr, int l, int r)
             {
                 T pivot = arr[r];
                 int p = l - 1;
@@ -172,7 +172,7 @@
                 ++p;
                 (arr[p], arr[r]) = (arr[r], arr[p]);
                 return p;
-            };
+            }
             if (l >= r) return;
             int p = partition(arr, l, r);
             quickLomuto(arr, l, p - 1);
@@ -190,6 +190,57 @@
             T[] arr = [.. enumerable];
             quickLomuto(arr, 0, arr.Length - 1);
             return arr;
+        }
+
+        private static T[] merge<T>(Span<T> left, Span<T> right) where T : IComparable<T>
+        {
+            T[] result = new T[left.Length + right.Length];
+            int i, l, r;
+            i = l = r = 0;
+            while (l < left.Length && r < right.Length)
+            {
+                if (left[l].CompareTo(right[r]) < 0)
+                {
+                    result[i] = left[l];
+                    ++l;
+                }
+                else
+                {
+                    result[i] = right[r];
+                    ++r;
+                }
+                ++i;
+            }
+
+            void extend(Span<T> ext, int ext_idx)
+            {
+                while (ext_idx < ext.Length) // && i < result.Length
+                {
+                    result[i++] = ext[ext_idx++];
+                }
+            }
+
+            extend(left, l);
+            extend(right, r);
+            return result;
+        }
+        public static T[] MergeSort<T>(this IEnumerable<T> enumerable) where T : IComparable<T>
+        {
+            T[] arr = [.. enumerable];
+
+            static T[] divideSort(Span<T> span)
+            {
+                if (span.Length <= 1)
+                {
+                    return [..span];
+                }
+                int mid = span.Length / 2;
+                T[] left = divideSort(span[0..mid]);
+                T[] rigth = divideSort(span[mid..span.Length]);
+                return merge(left, rigth);
+            }
+
+            return divideSort(arr);
         }
     }
 }
