@@ -26,9 +26,7 @@ def bubble_simple_sort(iterable: Iterable[T]) -> list[T]:
             break
     return arr
 
-def bubble_sort(iterable: Iterable[T]) -> list[T]:
-    """Bubble sort. Returns a new sorted list[T]."""
-    arr: list[T] = list(iterable)
+def __bubble(arr: list[T]):
     n = len(arr)
     while n > 1:
         border = 0
@@ -37,6 +35,11 @@ def bubble_sort(iterable: Iterable[T]) -> list[T]:
                 arr[i], arr[i + 1] = arr[i + 1], arr[i]
                 border = i + 1
         n = border
+
+def bubble_sort(iterable: Iterable[T]) -> list[T]:
+    """Bubble sort. Returns a new sorted list[T]."""
+    arr: list[T] = list(iterable)
+    __bubble(arr)
     return arr
 
 def cocktail_sort(iterable: Iterable[T]) -> list[T]:
@@ -198,14 +201,7 @@ def comb_sort(iterable: Iterable[T]) -> list[T]:
         step = next_step(step)
 
     #bubble
-    n = len(arr)
-    while n > 1:
-        border = 0
-        for i in range(n - 1):
-            if arr[i] > arr[i + 1]:
-                arr[i], arr[i + 1] = arr[i + 1], arr[i]
-                border = i + 1
-        n = border
+    __bubble(arr)
     return arr
 
 #Same to comb_sort
