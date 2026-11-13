@@ -2,9 +2,8 @@
 {
     public static class Sorts
     {
-        public static T[] BubbleSort<T>(this IEnumerable<T> enumerable) where T : IComparable<T>
+        private static void bubble<T>(Span<T> arr) where T : IComparable<T>
         {
-            T[] arr = [.. enumerable];
             int n = arr.Length;
             while (n > 1)
             {
@@ -19,10 +18,15 @@
                 }
                 n = border;
             }
+        }
+        public static T[] BubbleSort<T>(this IEnumerable<T> enumerable) where T : IComparable<T>
+        {
+            T[] arr = [.. enumerable];
+            bubble(arr);
             return arr;
         }
-        
-        public static T[] CocktailSort<T>(this IEnumerable<T> enumerable) where T: IComparable<T>
+
+        public static T[] CocktailSort<T>(this IEnumerable<T> enumerable) where T : IComparable<T>
         {
             T[] arr = [.. enumerable];
             int left = 0;
@@ -92,7 +96,7 @@
 
         public static T[] SelectionSort<T>(this IEnumerable<T> enumerable) where T : IComparable<T>
         {
-            T[] arr = [..enumerable];
+            T[] arr = [.. enumerable];
             for (int i = 0; i < arr.Length; i++)
             {
                 int min_idx = i;
@@ -232,7 +236,7 @@
             {
                 if (span.Length <= 1)
                 {
-                    return [..span];
+                    return [.. span];
                 }
                 int mid = span.Length / 2;
                 T[] left = divideSort(span[0..mid]);
@@ -241,6 +245,32 @@
             }
 
             return divideSort(arr);
+        }
+
+        public static T[] CombSort<T>(this IEnumerable<T> enumerable) where T : IComparable<T>
+        {
+            T[] arr = [.. enumerable];
+            var f = 1.247331;
+
+            int nextStep(int step)
+            {
+                return (int)(step / f);
+            }
+
+            int step = nextStep(arr.Length);
+            //comb
+            while (step > 1)
+            {
+                for (int i = 0; i < arr.Length - step; i++)
+                    if (arr[i].CompareTo(arr[i + step]) > 0)
+                    {
+                        (arr[i], arr[i + step]) = (arr[i + step], arr[i]);
+                    }
+                step = nextStep(step);
+            }
+            //bubble
+            bubble(arr);
+            return arr;
         }
     }
 }
