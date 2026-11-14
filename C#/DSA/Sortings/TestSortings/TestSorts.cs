@@ -14,7 +14,9 @@ namespace TestSortings
             Sorts.QuickSortHoare,
             Sorts.QuickSortLomuto,
             Sorts.MergeSort,
-            Sorts.CombSort
+            Sorts.CombSort,
+            Sorts.ShellSort,
+            Sorts.ShellKnuthSort
         ];
         public static readonly TheoryData<Func<IEnumerable<int>, int[]>, int> TestData = 
             ((Func<TheoryData<Func<IEnumerable<int>, int[]>, int>>)(() =>

@@ -228,6 +228,7 @@
             extend(right, r);
             return result;
         }
+
         public static T[] MergeSort<T>(this IEnumerable<T> enumerable) where T : IComparable<T>
         {
             T[] arr = [.. enumerable];
@@ -250,10 +251,10 @@
         public static T[] CombSort<T>(this IEnumerable<T> enumerable) where T : IComparable<T>
         {
             T[] arr = [.. enumerable];
-            var f = 1.247331;
 
-            int nextStep(int step)
+            static int nextStep(int step)
             {
+                const double f = 1.247331;
                 return (int)(step / f);
             }
 
@@ -270,6 +271,57 @@
             }
             //bubble
             bubble(arr);
+            return arr;
+        }
+
+        private static void shell<T>(T[] arr, int step, Func<int, int> nextStep) where T : IComparable<T> {
+            while (step > 0)
+            {
+                for (int i = step; i < arr.Length; i++)
+                {
+                    T item = arr[i];
+                    int j = i - step;
+                    while (j >= 0 && arr[j].CompareTo(item) > 0)
+                    {
+                        arr[j + step] = arr[j];
+                        j -= step;
+                    }
+                    arr[j + step] = item;
+                }
+                step = nextStep(step);
+            }
+        }
+
+        public static T[] ShellSort<T>(this IEnumerable<T> enumerable) where T : IComparable<T>
+        {
+            T[] arr = [.. enumerable];
+
+            static int nextStep(int step)
+            {
+                return step / 2;
+            }
+
+            int step = nextStep(arr.Length);
+            shell(arr, step, nextStep);
+            return arr;
+        }
+
+        public static T[] ShellKnuthSort<T>(this IEnumerable<T> enumerable) where T : IComparable<T>
+        {
+            T[] arr = [.. enumerable];
+
+            static int nextStep(int step)
+            {
+                return (step - 1) / 3;
+            }
+
+            int step = 1;
+            while (step < arr.Length / 3)
+            {
+                step = step * 3 + 1;
+            }
+
+            shell(arr, step, nextStep);
             return arr;
         }
     }
