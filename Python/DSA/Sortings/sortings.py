@@ -1,5 +1,5 @@
 from collections.abc import Iterable
-from typing import Protocol, TypeVar
+from typing import Protocol, TypeVar, Callable
 
 class Comparable(Protocol):
     """Comparable Protocol"""
@@ -232,12 +232,7 @@ def comb_same_sort(iterable: Iterable[T]) -> list[T]:
         step = next_step(step)
     return arr
 
-def shell_sort(iterable: Iterable[T]) -> list[T]:
-    """Shell sort. Returns a new sorted list[T]."""
-    arr: list[T] = list(iterable)
-    def next_step(step):
-        return step // 2
-    step = next_step(len(arr))
+def __shell(arr: list[T], step: int, next_step: Callable[[int], int]):
     while step > 0:
         for i in range(step, len(arr)):
             item = arr[i]
@@ -247,6 +242,16 @@ def shell_sort(iterable: Iterable[T]) -> list[T]:
                 j -= step
             arr[j + step] = item
         step = next_step(step)
+
+def shell_sort(iterable: Iterable[T]) -> list[T]:
+    """Shell sort. Returns a new sorted list[T]."""
+    arr: list[T] = list(iterable)
+
+    def next_step(step):
+        return step // 2
+
+    step = next_step(len(arr))
+    __shell(arr, step, next_step)
     return arr
 
 def shell_knuth_sort(iterable: Iterable[T]) -> list[T]:
@@ -255,14 +260,9 @@ def shell_knuth_sort(iterable: Iterable[T]) -> list[T]:
     step = 1
     while step < len(arr) // 3:
         step = step * 3 + 1
-    print(step)
-    while step > 0:
-        for i in range(step, len(arr)):
-            item = arr[i]
-            j = i
-            while j >= step and arr[j - step] > item:
-                arr[j] = arr[j - step]
-                j -= step
-            arr[j] = item
-        step = (step - 1) // 3
+
+    def next_step(step: int):
+        return (step - 1) // 3
+
+    __shell(arr, step, next_step)
     return arr
