@@ -5,8 +5,6 @@ class Comparable(Protocol):
     """Comparable Protocol"""
     def __lt__(self, other) -> bool:
         pass
-    def __le__(self, other) -> bool:
-        pass
     def __gt__(self, other) -> bool:
         pass
 
@@ -83,7 +81,7 @@ def dwarf_sort(iterable: Iterable[T]) -> list[T]:
     i = 1
     j = i + 1
     while i < len(arr):
-        if i == 0 or arr[i - 1] <= arr[i]:
+        if i == 0 or not arr[i - 1] > arr[i]: # arr[i - 1] <= arr[i]
             i = j
             j += 1
         else:
@@ -139,7 +137,7 @@ def quick_sort_lomuto(iterable: Iterable[T]) -> list[T]:
         pivot = arr[l]
         p = l
         for i in range(l + 1, r + 1):
-            if arr[i] <= pivot:
+            if not arr[i] > pivot: # arr[i] <= pivot
                 p += 1
                 arr[i], arr[p] = arr[p], arr[i]
         arr[l], arr[p] = arr[p], arr[l]
