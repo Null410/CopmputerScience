@@ -1,6 +1,6 @@
 from typing import override, Any
-from linked_list import LinkedList
-from struct_interface import Struct
+from structs.linked_list import LinkedList
+from structs.struct_interface import Struct
 from nodes.node import Node
 
 class Queue(LinkedList, Struct):

@@ -1,5 +1,5 @@
 from typing import Iterable
-from linked_list import LinkedList
+from structs.linked_list import LinkedList
 from nodes.node import Node
 #from warnings import deprecated
 

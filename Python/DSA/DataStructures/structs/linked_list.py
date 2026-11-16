@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Any, overload
 import threading
 import asyncio
-from struct_interface import BaseStruct
+from structs.struct_interface import BaseStruct
 from nodes.node import Node
 
 class LinkedList(BaseStruct):

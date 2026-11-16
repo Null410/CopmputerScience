@@ -1,9 +1,9 @@
 from typing import Any
 import threading
 import asyncio
-from struct_interface import Struct
+from structs.struct_interface import Struct
+from structs.linked_list import ListIterator
 from nodes.doubly_node import DoublyNode
-from linked_list import ListIterator
 
 class Deque(Struct):
     """Represents a deque"""
