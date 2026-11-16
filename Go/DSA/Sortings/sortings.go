@@ -20,16 +20,22 @@ func bubble[T any](arr []T, compare func(a, b T) int) {
 	}
 }
 
+// Bubble sort.
+// Returns a new slice []T, sorted according to the comparison function.
 func BubbleSortFunc[T any](seq iter.Seq[T], compare func(a, b T) int) []T {
 	arr := slices.Collect(seq)
 	bubble(arr, compare)
 	return arr
 }
 
+// Bubble sort.
+// Returns a new slice []T, sorted in ascending order.
 func BubbleSort[T cmp.Ordered](seq iter.Seq[T]) []T {
 	return BubbleSortFunc(seq, cmp.Compare[T])
 }
 
+// Cocktail sort.
+// Returns a new slice []T, sorted according to the comparison function.
 func CocktailSortFunc[T any](seq iter.Seq[T], compare func(a, b T) int) []T {
 	arr := slices.Collect(seq)
 	left := 0
@@ -54,10 +60,14 @@ func CocktailSortFunc[T any](seq iter.Seq[T], compare func(a, b T) int) []T {
 	return arr
 }
 
+// Cocktail sort.
+// Returns a new slice []T, sorted in ascending order.
 func CocktailSort[T cmp.Ordered](seq iter.Seq[T]) []T {
 	return CocktailSortFunc(seq, cmp.Compare[T])
 }
 
+// Insertion sort.
+// Returns a new slice []T, sorted according to the comparison function.
 func InsertionSortFunc[T any](seq iter.Seq[T], compare func(a, b T) int) []T {
 	arr := slices.Collect(seq)
 	for i := 1; i < len(arr); i++ {
@@ -72,6 +82,32 @@ func InsertionSortFunc[T any](seq iter.Seq[T], compare func(a, b T) int) []T {
 	return arr
 }
 
+// Insertion sort.
+// Returns a new slice []T, sorted in ascending order.
 func InsertionSort[T cmp.Ordered](seq iter.Seq[T]) []T {
 	return InsertionSortFunc(seq, cmp.Compare[T])
+}
+
+// Dwarf sort.
+// Returns a new slice []T, sorted according to the comparison function.
+func DwarfSortFunc[T any](seq iter.Seq[T], compare func(a, b T) int) []T {
+	arr := slices.Collect(seq)
+	i := 1
+	j := i + 1
+	for i < len(arr) {
+		if i == 0 || compare(arr[i-1], arr[i]) < 0 {
+			i = j
+			j++
+		} else {
+			arr[i-1], arr[i] = arr[i], arr[i-1]
+			i--
+		}
+	}
+	return arr
+}
+
+// Dwarf sort.
+// Returns a new slice []T, sorted in ascending order.
+func DwarfSort[T cmp.Ordered](seq iter.Seq[T]) []T {
+	return DwarfSortFunc(seq, cmp.Compare)
 }
