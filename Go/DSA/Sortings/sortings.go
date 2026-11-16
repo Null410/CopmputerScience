@@ -57,3 +57,21 @@ func CocktailSortFunc[T any](seq iter.Seq[T], compare func(a, b T) int) []T {
 func CocktailSort[T cmp.Ordered](seq iter.Seq[T]) []T {
 	return CocktailSortFunc(seq, cmp.Compare[T])
 }
+
+func InsertionSortFunc[T any](seq iter.Seq[T], compare func(a, b T) int) []T {
+	arr := slices.Collect(seq)
+	for i := 1; i < len(arr); i++ {
+		item := arr[i]
+		j := i - 1
+		for j >= 0 && compare(arr[j], item) > 0 {
+			arr[j+1] = arr[j]
+			j--
+		}
+		arr[j+1] = item
+	}
+	return arr
+}
+
+func InsertionSort[T cmp.Ordered](seq iter.Seq[T]) []T {
+	return InsertionSortFunc(seq, cmp.Compare[T])
+}

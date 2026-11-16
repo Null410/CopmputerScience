@@ -18,6 +18,7 @@ func getSorts() []sortFunc {
 	return []sortFunc{
 		{"BubbleSort", sortings.BubbleSort[int]},
 		{"CocktailSort", sortings.CocktailSort[int]},
+		{"InsertionSort", sortings.InsertionSort[int]},
 	}
 }
 
