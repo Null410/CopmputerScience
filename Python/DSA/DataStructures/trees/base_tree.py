@@ -1,14 +1,13 @@
-from typing import Generator
+from typing import Generator, Generic
+from abc import ABC
 from structs.queue_ import Queue
-from nodes.bitree_node import BiTreeNode, Key
-from nodes.bitree_val_node import BiTreeValNode
+from nodes.bitree_node import BiTreeNodeT, Key
 
-#! Will be changed with BaseTree[TreeKey, BiTreeNodeT]
-#! BiTreeNode -> BiTreeNodeT
-class BaseTree():
-    """Represents a basic binary tree"""
-
-    _root : BiTreeNode | None
+#! Will be changed with TreeKey
+class BaseTree(Generic[BiTreeNodeT], ABC):
+    """Represents an abstract binary tree"""
+    _root: BiTreeNodeT | None
+    _count: int
 
     def __init__(self):
         self._root = None
@@ -23,9 +22,8 @@ class BaseTree():
         """Returns True if tree is empty and False if not"""
         return self._root is None
 
-    #! Will be changed with 'BiTreeNodeT | None'
     @staticmethod
-    def _find_node(root: BiTreeNode | BiTreeValNode | None, key: Key) -> BiTreeNode | BiTreeValNode | None:
+    def _find_node(root: BiTreeNodeT | None, key: Key) -> BiTreeNodeT | None:
         while root:
             if key == root.key:
                 return root
@@ -37,19 +35,17 @@ class BaseTree():
         return not BaseTree._find_node(self._root, key) is None
 
     @staticmethod
-    def _find_min(node: BiTreeNode) -> BiTreeNode:
-        tmp = node
-        while tmp:
-            min_node = tmp
-            tmp = tmp.left
-        return min_node
+    def _find_min(node: BiTreeNodeT) -> BiTreeNodeT:
+        while node.left is not None:
+            node = node.left
+        return node
 
     def delete(self, key: Key):
         """
         Deletes a node with the specified key from the tree.
         If duplicate keys are allowed, deletes the first one found.
         """
-        def delete_node(node: BiTreeNode | None, key: Key):
+        def delete_node(node: BiTreeNodeT | None, key: Key):
             find_node = False
             if node is None:
                 return find_node, None
@@ -80,7 +76,7 @@ class BaseTree():
     @property
     def dfs_rec(self) -> Generator[Key, None, None]:
         """Returns a generator for recursive DFS"""
-        def preorder(node: BiTreeNode | None):
+        def preorder(node: BiTreeNodeT | None):
             if node is None:
                 return
             yield node.key
@@ -97,7 +93,7 @@ class BaseTree():
         parent_.push(self._root)
         child_ = Queue()
         while not parent_.is_empty():
-            node: BiTreeNode = parent_.pop()
+            node: BiTreeNodeT = parent_.pop()
             if node.left:
                 child_.push(node.left)
             if node.right:
@@ -106,7 +102,7 @@ class BaseTree():
             if parent_.is_empty():
                 parent_, child_ = child_, parent_
 
-    def _raise_if_empty(self) -> BiTreeNode:
+    def _raise_if_empty(self) -> BiTreeNodeT:
         if self._root is None:
             raise IndexError("BiTree is empty")
         return self._root
@@ -116,7 +112,7 @@ class BaseTree():
         Returns the tree depth (recursive).
         If the tree is empty, returns -1.
         """
-        def get_depth(node: BiTreeNode | None) -> int:
+        def get_depth(node: BiTreeNodeT | None) -> int:
             if node is None:
                 return -1
             return 1 + max(get_depth(node.left), get_depth(node.right))

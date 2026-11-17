@@ -1,4 +1,4 @@
-from typing import Any, cast
+from typing import Any
 from trees.base_tree import BaseTree
 from nodes.bitree_node import Key
 from nodes.bitree_val_node import BiTreeValNode
@@ -15,8 +15,8 @@ class NotFoundKeyError(Exception):
         self.key = key
         super().__init__(f"[{when}]: The key ({self.key}) is not found!")
 
-#! Will be changed with BaseTree[TreeKey, BiTreeValNode]
-class BSTree(BaseTree):
+#! Will be changed with TreeKey
+class BSTree(BaseTree[BiTreeValNode]):
     """Represents Binary Search Tree"""
 
     def insert(self, key: Key, value: Any):
@@ -39,8 +39,7 @@ class BSTree(BaseTree):
 
     def get(self, key: Key) -> Any:
         """Finds and returns a value by the key"""
-        node = BaseTree._find_node(self._root, key)
+        node = self._find_node(self._root, key)
         if node is None:
             raise NotFoundKeyError(key, self.get.__name__)
-        node = cast(BiTreeValNode, node) #! a temporary solution
         return node.value
