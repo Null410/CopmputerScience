@@ -1,24 +1,25 @@
-from typing import Any
+from typing import Any, cast
 from trees.base_tree import BaseTree
-from nodes.bitree_node import TreeKey
+from nodes.bitree_node import Key
 from nodes.bitree_val_node import BiTreeValNode
 
 class DuplicateKeyError(Exception):
     """Error: duplicate keys"""
-    def __init__(self, key: TreeKey, when: str):
+    def __init__(self, key: Key, when: str):
         self.key = key
         super().__init__(f"[{when}]: The key ({self.key}) is already in the tree!")
 
 class NotFoundKeyError(Exception):
     """Error: key is not found"""
-    def __init__(self, key: TreeKey, when: str):
+    def __init__(self, key: Key, when: str):
         self.key = key
         super().__init__(f"[{when}]: The key ({self.key}) is not found!")
 
+#! Will be changed with BaseTree[TreeKey, BiTreeValNode]
 class BSTree(BaseTree):
     """Represents Binary Search Tree"""
 
-    def insert(self, key: TreeKey, value: Any):
+    def insert(self, key: Key, value: Any):
         """Insert the value with the key into the tree. Forbids duplicate keys."""
         new_node = BiTreeValNode(key, value)
         if self.is_empty():
@@ -36,9 +37,10 @@ class BSTree(BaseTree):
                 parent.left = new_node
         self._count += 1
 
-    def get(self, key: TreeKey) -> Any:
+    def get(self, key: Key) -> Any:
         """Finds and returns a value by the key"""
-        node: BiTreeValNode = BaseTree._find_node(self._root, key)
+        node = BaseTree._find_node(self._root, key)
         if node is None:
             raise NotFoundKeyError(key, self.get.__name__)
+        node = cast(BiTreeValNode, node) #! a temporary solution
         return node.value
