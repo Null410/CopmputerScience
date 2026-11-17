@@ -1,6 +1,6 @@
 from itertools import product
 from collections.abc import Sequence
-from typing import TypeVar, Final, Callable, Iterable
+from typing import TypeVar, Final, Callable, cast
 import pytest
 from structs.struct_interface import BaseStruct, Struct
 from structs.linked_list import LinkedList
@@ -9,7 +9,7 @@ from structs.stack import Stack
 from structs.queue_ import Queue
 from structs.deque_ import Deque
 
-def get_stack(arr: Iterable) -> Stack:
+def get_stack(arr: Sequence) -> Stack:
     """
     Returna a new stack from an iterable.
     The order of thr elements is preserved.
@@ -18,16 +18,16 @@ def get_stack(arr: Iterable) -> Stack:
         Output: 1 -> 2 -> 3
     """
     stack = Stack()
-    for a in arr[::-1]:
+    for a in reversed(arr):
         stack.push(a)
     return stack
 
 BaseStructT = TypeVar('BaseStructT', bound=BaseStruct)
 
-def get_struct_from_iterable(arr: Iterable, struct_type: type[BaseStructT]) -> BaseStructT:
+def get_struct_from_iterable(arr: Sequence, struct_type: type[BaseStructT]) -> BaseStructT:
     """Returna a new struct from an iterable."""
     if struct_type is Stack:
-        return get_stack(arr)
+        return cast(BaseStructT, get_stack(arr))
     struct = struct_type()
     for a in arr:
         struct.push(a)
@@ -52,12 +52,12 @@ VALUES: Final = [
 
 #LinkedList, Stack, Queue, Deque
 
-BASE_STRUCT_TYPES: Final[type[BaseStruct]]= [
+BASE_STRUCT_TYPES: Final[tuple[type[BaseStruct],...]]= (
     LinkedList,
     Stack,
     Queue,
     Deque
-]
+)
 
 @pytest.mark.parametrize("values, struct_type",
     list(product(VALUES,  BASE_STRUCT_TYPES)),
@@ -82,11 +82,11 @@ def test_struct_length(length, struct_type):
 
 #Stack, Queue, Deque
 
-STRUCT_TYPES: Final[type[Struct]] = [
+STRUCT_TYPES: Final[tuple[type[Struct], ...]] = (
     Stack,
     Queue,
     Deque
-]
+)
 
 @pytest.mark.parametrize("values, struct_type",
     list(product(VALUES, STRUCT_TYPES)),

@@ -1,9 +1,15 @@
 from __future__ import annotations
-from typing import Any
+from typing import Any, TypeVar
 
+NodeT = TypeVar("NodeT", bound='Node')
+
+#! will be changed with 'Generic[..., NodeT]'
 class Node:
     """Represents a node"""
     __slots__ = ('_value', '_next')
+
+    _next: 'Node | None'
+
     def __init__(self, value: Any):
         self._value = value
         self._next = None
@@ -19,5 +25,5 @@ class Node:
         """Returns the next node"""
         return self._next
     @next.setter
-    def next(self, next_node: 'Node' | None):
+    def next(self, next_node: 'Node | None'):
         self._next = next_node

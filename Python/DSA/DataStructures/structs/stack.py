@@ -13,15 +13,16 @@ class Stack(LinkedList, Struct):
         self._head = new_head
         self._length += 1
 
-    def __raise_if_empty(self):
-        if self.is_empty():
+    def __raise_if_empty(self) -> Node:
+        if self._head is None:
             raise IndexError("Stack is empty")
+        return self._head
 
     def _pop(self) -> Any:
         """Deletes and returns a value from the top of the stack"""
-        self.__raise_if_empty()
-        value = self._head.value
-        self._head = self._head.next
+        head = self.__raise_if_empty()
+        value = head.value
+        self._head = head.next
         self._length -= 1
         return value
 
@@ -37,5 +38,5 @@ class Stack(LinkedList, Struct):
 
     def peek(self) -> Any:
         """Returns a value from the top of the stack"""
-        self.__raise_if_empty()
-        return self._head.value
+        head = self.__raise_if_empty()
+        return head.value

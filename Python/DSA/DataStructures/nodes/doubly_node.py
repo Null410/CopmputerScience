@@ -1,9 +1,14 @@
 from __future__ import annotations
 from typing import Any
 
+#! Will be inherited from Node & changed with new the correct Node logic
 class DoublyNode:
     """Represents a doubly node"""
     __slots__ = ('_value', '_next', '_prev')
+
+    _next: 'DoublyNode | None'
+    _prev: 'DoublyNode | None'
+
     def __init__(self, value: Any):
         self._value = value
         self._next = None
@@ -20,12 +25,12 @@ class DoublyNode:
         """Returns the next node"""
         return self._next
     @next.setter
-    def next(self, next_node: 'DoublyNode' | None):
+    def next(self, next_node: 'DoublyNode | None'):
         self._next = next_node
     @property
     def prev(self):
         """Returns the previous node"""
         return self._prev
     @prev.setter
-    def prev(self, prev_node: 'DoublyNode' | None):
+    def prev(self, prev_node: 'DoublyNode | None'):
         self._prev = prev_node

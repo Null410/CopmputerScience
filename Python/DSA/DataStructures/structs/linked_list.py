@@ -3,8 +3,8 @@ from typing import Any, overload
 import threading
 import asyncio
 from structs.struct_interface import BaseStruct
+from structs.struct_iterator import StructIterator
 from nodes.node import Node
-
 class LinkedList(BaseStruct):
     """Represents a linked list"""
     def __init__(self, head: Node | None = None):
@@ -25,7 +25,7 @@ class LinkedList(BaseStruct):
     def _push(self, value: Any):
         """Push a new value to the end of the list"""
         new_node = Node(value)
-        if self.is_empty():
+        if self._head is None:
             self._head = new_node
         else:
             tail = self._head
@@ -62,7 +62,7 @@ class LinkedList(BaseStruct):
         return result[:-4]
 
     def __iter__(self):
-        return ListIterator(self._head)
+        return StructIterator(self._head)
 
     @overload
     def __getitem__(self, idx: int) -> Any:
@@ -91,16 +91,3 @@ class LinkedList(BaseStruct):
         if idx >= 0:
             raise IndexError
         return result
-
-class ListIterator:
-    """Represents a linked list iterator"""
-    def __init__(self, head: Node):
-        self.__head = head
-    def __iter__(self):
-        return self
-    def __next__(self):
-        if self.__head is None:
-            raise StopIteration
-        node = self.__head
-        self.__head = self.__head.next
-        return node.value

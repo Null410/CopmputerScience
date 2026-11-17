@@ -11,7 +11,7 @@ class LinkedListPro(LinkedList):
         head = tail = None
         for arg in args:
             new_node = Node(arg)
-            if head is None:
+            if tail is None: # head is None
                 head = new_node
                 tail = head
             else:
@@ -27,7 +27,7 @@ class LinkedListPro(LinkedList):
 
         for item in iterable:
             node = Node(item)
-            if head is None:
+            if tail is None:  # head is None
                 head = tail = node
                 continue
             tail.next = node
@@ -50,8 +50,8 @@ class LinkedListPro(LinkedList):
         if not args:
             return cls()
 
-        tail: Node = None
-        head: Node = None
+        tail: Node | None = None
+        head: Node | None = None
         # Сlosure is used.
         def processing_iter(args) -> None:
             nonlocal tail
@@ -76,17 +76,21 @@ class LinkedListPro(LinkedList):
         """
         An alternative function for from_iter_values(*args).
         """
-        if not args:
-            return cls()
         # The function returns only a head node.
         # Repeated passage to the end of the list (tail) generated for each iterated object.
-        def processing_iter(args) -> Node:
-            if not hasattr(args, '__iter__') or (isinstance(args, str) and len(args) == 1):
+        def processing_iter(args) -> Node | None:
+            is_iter = hasattr(args, '__iter__')
+            if is_iter and not args:
+                return None
+            if not is_iter or (isinstance(args, str) and len(args) == 1):
                 return Node(args)
             head = tail = None
             for arg in args:
                 tmp = processing_iter(arg)
-                if head is None:
+                # if was an empty data set
+                if tmp is None:
+                    continue
+                if tail is None: # head is None
                     head = tmp
                 else:
                     tail.next = tmp
@@ -103,17 +107,21 @@ class LinkedListPro(LinkedList):
         """
         An alternative function for from_iter_values(*args).
         """
-        if not args:
-            return cls()
         # The function returns head and tail nodes (even if they are identical).
-        def processing_iter(args) -> tuple[Node, Node]:
-            if not hasattr(args, '__iter__') or (isinstance(args, str) and len(args) == 1):
+        def processing_iter(args) -> tuple[Node | None, Node | None]:
+            is_iter = hasattr(args, '__iter__')
+            if is_iter and not args:
+                return None, None
+            if not is_iter or (isinstance(args, str) and len(args) == 1):
                 new_node = Node(args)
                 return (new_node, new_node)
             head = tail = None
             for arg in args:
                 iter_head, iter_tail = processing_iter(arg)
-                if head is None:
+                # if was an empty data set
+                if iter_head is None:
+                    continue
+                if tail is None: # head is None
                     head = iter_head
                     tail = iter_tail
                     continue
