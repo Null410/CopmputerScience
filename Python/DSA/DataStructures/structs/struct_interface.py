@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from collections.abc import Sequence
 from typing import Any, Iterator
 
-#! 'Any' will be changed
 class BaseStruct(Sequence, ABC):
     """Base struct interface"""
     @abstractmethod

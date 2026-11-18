@@ -5,6 +5,7 @@ import asyncio
 from structs.struct_interface import BaseStruct
 from structs.struct_iterator import StructIterator
 from nodes.node import Node
+
 class LinkedList(BaseStruct):
     """Represents a linked list"""
     def __init__(self, head: Node | None = None):

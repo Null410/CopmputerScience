@@ -3,7 +3,6 @@ from typing import Any, TypeVar
 
 NodeT = TypeVar("NodeT", bound='Node')
 
-#! will be changed with 'Generic[..., NodeT]'
 class Node:
     """Represents a node"""
     __slots__ = ('_value', '_next')
