@@ -78,10 +78,13 @@ class LinkedList(BaseStruct):
             # may be implemented later
             raise NotImplementedError
 
+        leng = len(self)
         if idx < 0:
-            leng = len(self)
             idx = leng + idx
             if idx < 0:
+                raise IndexError
+        else:
+            if idx >= leng:
                 raise IndexError
 
         node = self._head
@@ -89,6 +92,6 @@ class LinkedList(BaseStruct):
             result = node.value
             node = node.next
             idx -= 1
-        if idx >= 0:
-            raise IndexError
+        #if idx >= 0:
+        #    raise IndexError
         return result
