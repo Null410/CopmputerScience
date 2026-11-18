@@ -1,10 +1,17 @@
-from nodes.node import Node
-from nodes.doubly_node import DoublyNode
+from typing import Protocol, Any
 
-#! Will be changed to work correctly with different Node types and values
+class StructNode(Protocol):
+    """Node Protocol"""
+    @property
+    def next(self) -> Any:
+        """Returns the next node"""
+    @property
+    def value(self) -> Any:
+        """Returns the value"""
+
 class StructIterator:
-    """Represents a linked list iterator"""
-    def __init__(self, head: Node | DoublyNode | None):
+    """Represents a struct iterator"""
+    def __init__(self, head: StructNode | None):
         self.__head = head
     def __iter__(self):
         return self

@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import Any
 
-#! Will be inherited from Node & changed with new the correct Node logic
 class DoublyNode:
     """Represents a doubly node"""
     __slots__ = ('_value', '_next', '_prev')
