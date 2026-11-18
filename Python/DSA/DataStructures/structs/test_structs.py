@@ -41,14 +41,14 @@ def compare_sequences(seq1: Sequence, seq2: Sequence):
     """Compare sequences"""
     return len(seq1) == len(seq2) and all (a1 == a2 for a1, a2 in zip(seq1, seq2))
 
-VALUES: Final = [
+VALUES: Final = (
     [1],
     ['1'],
     ['1', 2, '3'],
     [1, [2, 3]],
     ['1', 2, (3, 4)],
     [None]
-]
+)
 
 #LinkedList, Stack, Queue, Deque
 
@@ -67,10 +67,10 @@ def test_struct_push(values, struct_type):
     struct = get_struct_from_iterable(values, struct_type)
     assert compare_sequences(struct, values)
 
-LENG: Final = [
+LENG: Final = (
     0,
     10
-]
+)
 
 @pytest.mark.parametrize("length, struct_type",
     list(product(LENG, BASE_STRUCT_TYPES)),
@@ -106,10 +106,10 @@ def test_struct_peek(values, struct_type: type[Struct]):
     value = struct.peek()
     assert value == values[0] and len(struct) == len(values) and compare_sequences(struct, values)
 
-METHOD_NAMES: Final = [
+METHOD_NAMES: Final = (
     Struct.peek.__name__,
     Struct.pop.__name__
-]
+)
 
 @pytest.mark.parametrize("struct_type , method_name",
     list(product(STRUCT_TYPES, METHOD_NAMES)),
@@ -121,31 +121,51 @@ def test_struct_pop_index_error(struct_type: type[Struct], method_name):
     with pytest.raises(IndexError):
         _ = method()
 
-#LinkedList
+#LinkedList, Deque
 
-@pytest.mark.parametrize("length, idx",[
+BASE_STRUCT_TYPES_GETITEM: Final[tuple[type[BaseStruct], ...]] = (
+    LinkedList,
+    Deque
+)
+
+VALUES_GETITEM: Final = (
     (1, 0),
     (2, 1),
     (3, 2),
     (10, 5),
+    (10, 1),
+    (10, 8),
+    (10, -2),
     (1, -1),
-    (2, -1)
-])
-def test_list_getitem(length, idx):
-    """List __getitem__ tests"""
-    list_ = get_default_struct(length, LinkedList)
+    (2, -1),
+)
+
+@pytest.mark.parametrize("length_with_idx, struct_type",
+    list(product(VALUES_GETITEM, BASE_STRUCT_TYPES_GETITEM)),
+    ids = lambda x: x.__name__ if isinstance(x, type) else str(x))
+def test_struct_getitem(length_with_idx, struct_type: type[BaseStruct]):
+    """Structs __getitem__ tests"""
+    length = length_with_idx[0]
+    idx = length_with_idx[1]
+    list_ = get_default_struct(length, struct_type)
     exp = list(range(length))
     assert list_[idx] == exp[idx]
 
-@pytest.mark.parametrize("length, idx",[
+VALUES_GETITEM_INDEX_ERROR: Final = (
     (1, -2),
     (1, 1),
     (1, 2),
-    (2, 10)
-])
-def test_list_getitem_index_error(length, idx):
-    """List __getitem__ IndexError tests"""
-    list_ = get_default_struct(length, LinkedList)
+    (2, 10),
+)
+
+@pytest.mark.parametrize("length_with_idx, struct_type",
+    list(product(VALUES_GETITEM_INDEX_ERROR, BASE_STRUCT_TYPES_GETITEM)),
+    ids = lambda x: x.__name__ if isinstance(x, type) else str(x))
+def test_struct_getitem_index_error(length_with_idx, struct_type: type[BaseStruct]):
+    """Structs __getitem__ IndexError tests"""
+    length = length_with_idx[0]
+    idx = length_with_idx[1]
+    list_ = get_default_struct(length, struct_type)
     with pytest.raises(IndexError):
         _ = list_[idx]
 
@@ -165,13 +185,13 @@ def test_list_from_values(args):
     list_ = LinkedListPro.from_values(*args)
     assert compare_sequences(list_, args)
 
-ITERABLE_VALUES: Final = [
+ITERABLE_VALUES: Final = (
     [],
     [1, 2 , 3],
     [1, [2, 3]],
     (1, "2", [2, 3]),
     "12345"
-]
+)
 
 @pytest.mark.parametrize("iterable", ITERABLE_VALUES)
 def test_list_from_iterable(iterable):
@@ -179,11 +199,11 @@ def test_list_from_iterable(iterable):
     list_ = LinkedListPro.from_iterable(iterable)
     assert compare_sequences(list_, iterable)
 
-ITER_FUNCS: Final = [
+ITER_FUNCS: Final = (
     LinkedListPro.from_iter_values,
     LinkedListPro.from_iter_values_alternative_1,
     LinkedListPro.from_iter_values_alternative_2
-]
+)
 
 @pytest.mark.parametrize("iter_func", ITER_FUNCS)
 def test_list_from_iter_values_when_empty(iter_func):
@@ -191,7 +211,7 @@ def test_list_from_iter_values_when_empty(iter_func):
     list_: LinkedListPro = iter_func()
     assert len(list_) == 0
 
-ARGS_WITH_EXPECTED: Final = [
+ARGS_WITH_EXPECTED: Final = (
     [ ( 1, ), [1] ],
     [ ( 1, [2, 3] ), [1, 2, 3] ],
     [ ( '1', 2, (3, 4) ), ['1', 2, 3, 4] ],
@@ -203,7 +223,7 @@ ARGS_WITH_EXPECTED: Final = [
     [ ( [[1], ['2', 3], [4, 5, 6, [7]], 8]), [1, '2', 3, 4, 5, 6, 7 ,8] ],
     [ ( "12345", ), ['1', '2', '3', '4', '5'] ],
     [ ( "12", "34", 5), ['1', '2', '3', '4', 5] ]
-]
+)
 
 @pytest.mark.parametrize("args_with_expected, from_iter_func",
     list(product(ARGS_WITH_EXPECTED, ITER_FUNCS)),

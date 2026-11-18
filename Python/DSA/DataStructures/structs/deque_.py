@@ -94,13 +94,13 @@ class Deque(Struct):
             node = node.prev
 
     def __getitem__(self, idx: int) -> Any:
-        if self.is_empty():
-            raise IndexError
-
         leng = len(self)
         if idx < 0:
             idx = leng + idx
             if idx < 0:
+                raise IndexError
+        else:
+            if idx >= leng:
                 raise IndexError
 
         get_next: Callable[[DoublyNode], DoublyNode | None]
@@ -122,7 +122,6 @@ class Deque(Struct):
             result = node.value
             node = get_next(node)
             idx -=1
-
-        if idx >= 0:
-            raise IndexError
+        #if idx >= 0:
+        #    raise IndexError
         return result
