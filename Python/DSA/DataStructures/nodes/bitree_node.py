@@ -1,17 +1,17 @@
 from __future__ import annotations
 from typing import Protocol, TypeVar, Generic, Any
-
+from abc import ABC
 class Key(Protocol):
     """Key Protocol"""
     def __eq__(self, other: Any) -> bool: ...
     def __gt__(self, other: Any) -> bool: ...
 
+BiTreeNodeT = TypeVar('BiTreeNodeT', bound='BaseTreeNode[Any]')
 TreeKey = TypeVar('TreeKey', bound=Key)
-BiTreeNodeT = TypeVar('BiTreeNodeT', bound='BiTreeNode[Any]')
 
 #! Will be changed with TreeKey
-class BiTreeNode(Generic[BiTreeNodeT]):
-    """Represents a node of a binary tree with a key"""
+class BaseTreeNode(Generic[BiTreeNodeT], ABC):
+    """Represents a base parent node for other nodes of a binary tree with a key"""
     __slots__ = ('_key', '_left', '_right')
 
     _left: 'BiTreeNodeT | None'
@@ -41,3 +41,6 @@ class BiTreeNode(Generic[BiTreeNodeT]):
     @right.setter
     def right(self, right: 'BiTreeNodeT | None'):
         self._right = right
+
+class BiTreeNode(BaseTreeNode['BiTreeNode']):
+    """Represents a node of a binary tree with a key"""

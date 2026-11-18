@@ -1,16 +1,14 @@
 from nodes.bitree_node import BiTreeNode, Key
 from trees.base_tree import BaseTree
 
-type TreeNode = BiTreeNode[TreeNode]
-
 #! Will be changed with TreeKey
-class BiTree(BaseTree[TreeNode]):
+class BiTree(BaseTree[BiTreeNode]):
     """Represents a binary tree"""
-    _root: TreeNode | None
+    _root: BiTreeNode | None
 
     def insert(self, key: Key):
         """Insert the key into the tree. Allows duplicate keys."""
-        new_node: TreeNode = BiTreeNode[TreeNode](key)
+        new_node = BiTreeNode(key)
         if self.is_empty():
             self._root = new_node
         else:
