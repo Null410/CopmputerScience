@@ -1,31 +1,17 @@
 from __future__ import annotations
 from typing import Any
+from nodes.node import BaseNode
 
-class DoublyNode:
+class DoublyNode(BaseNode['DoublyNode']):
     """Represents a doubly node"""
-    __slots__ = ('_value', '_next', '_prev')
+    __slots__ = ('_prev',)
 
     _next: 'DoublyNode | None'
     _prev: 'DoublyNode | None'
 
     def __init__(self, value: Any):
-        self._value = value
-        self._next = None
         self._prev = None
-    @property
-    def value(self):
-        """Returns the value"""
-        return self._value
-    @value.setter
-    def value(self, value: Any):
-        self._value = value
-    @property
-    def next(self):
-        """Returns the next node"""
-        return self._next
-    @next.setter
-    def next(self, next_node: 'DoublyNode | None'):
-        self._next = next_node
+        super().__init__(value)
     @property
     def prev(self):
         """Returns the previous node"""
