@@ -92,6 +92,5 @@ class LinkedList(BaseStruct):
             result = node.value
             node = node.next
             idx -= 1
-        #if idx >= 0:
-        #    raise IndexError
-        return result
+
+        return result  # pyright: ignore[reportPossiblyUnboundVariable]

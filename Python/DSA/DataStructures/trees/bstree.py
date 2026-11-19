@@ -15,26 +15,29 @@ class NotFoundKeyError(Exception):
         self.key = key
         super().__init__(f"[{when}]: The key ({self.key}) is not found!")
 
-#! Will be changed with TreeKey
 class BSTree(BaseTree[BiTreeValNode]):
     """Represents Binary Search Tree"""
 
     def insert(self, key: Key, value: Any):
         """Insert the value with the key into the tree. Forbids duplicate keys."""
         new_node = BiTreeValNode(key, value)
-        if self.is_empty():
+        if self._root is None:
             self._root = new_node
         else:
             node = self._root
-            while node:
+            while True:
                 if new_node.key == node.key:
                     raise DuplicateKeyError(new_node.key, self.insert.__name__)
-                parent = node
-                node = node.right if new_node.key > node.key else node.left
-            if new_node.key > parent.key:
-                parent.right = new_node
-            else:
-                parent.left = new_node
+                if new_node.key > node.key:
+                    if node.right is None:
+                        node.right = new_node
+                        break
+                    node = node.right
+                else:
+                    if node.left is None:
+                        node.left = new_node
+                        break
+                    node = node.left
         self._count += 1
 
     def get(self, key: Key) -> Any:

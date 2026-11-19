@@ -1,8 +1,8 @@
 from typing import Any
-from nodes.bitree_node import BaseTreeNode, Key
+from nodes.bitree_node import BiTreeNode, Key
 
 #! Will be changed with TreeKey
-class BiTreeValNode(BaseTreeNode['BiTreeValNode']):
+class BiTreeValNode(BiTreeNode):
     """Represents a node of a binary tree with a key and a value"""
     __slots__ = ('_value',)
     def __init__(self, key: Key, value: Any):

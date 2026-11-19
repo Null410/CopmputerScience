@@ -1,10 +1,9 @@
-from typing import Generator, Generic
+from typing import Generator
 from abc import ABC
 from structs.queue_ import Queue
-from nodes.bitree_node import BiTreeNodeT, Key
+from nodes.bitree_node import BiTreeNode, Key
 
-#! Will be changed with TreeKey
-class BaseTree(Generic[BiTreeNodeT], ABC):
+class BaseTree[BiTreeNodeT: BiTreeNode](ABC):
     """Represents an abstract binary tree"""
     _root: BiTreeNodeT | None
     _count: int

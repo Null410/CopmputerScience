@@ -122,6 +122,5 @@ class Deque(Struct):
             result = node.value
             node = get_next(node)
             idx -=1
-        #if idx >= 0:
-        #    raise IndexError
-        return result
+
+        return result # pyright: ignore[reportPossiblyUnboundVariable]
