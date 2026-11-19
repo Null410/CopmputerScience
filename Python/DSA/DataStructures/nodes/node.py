@@ -1,14 +1,10 @@
 from __future__ import annotations
-from typing import Any, TypeVar, Generic
-from abc import ABC
-
-NodeT = TypeVar("NodeT", bound='BaseNode[Any]')
-
-class BaseNode(Generic[NodeT], ABC):
-    """Represents a base parent node"""
+from typing import Any, Self
+class Node:
+    """Represents a node"""
     __slots__ = ('_value', '_next')
 
-    _next: NodeT | None
+    _next: Self | None
 
     def __init__(self, value: Any):
         self._value = value
@@ -25,8 +21,5 @@ class BaseNode(Generic[NodeT], ABC):
         """Returns the next node"""
         return self._next
     @next.setter
-    def next(self, next_node: NodeT | None):
+    def next(self, next_node: Self | None):
         self._next = next_node
-
-class Node(BaseNode['Node']):
-    """Represents a node"""
