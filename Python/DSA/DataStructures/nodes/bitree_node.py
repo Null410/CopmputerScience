@@ -1,9 +1,5 @@
-from typing import Protocol, Self, Any
+from typing import Self, Any
 from abc import ABC
-class Key(Protocol):
-    """Key Protocol"""
-    def __eq__(self, other: Any) -> bool: ...
-    def __gt__(self, other: Any) -> bool: ...
 
 class BiTreeNode(ABC):
     """Represents a node of a binary tree with a key"""
@@ -12,7 +8,7 @@ class BiTreeNode(ABC):
     _left: Self | None
     _right: Self | None
 
-    def __init__(self, key: Key):
+    def __init__(self, key: Any):
         self._key = key
         self._left = self._right = None
     @property
@@ -20,7 +16,7 @@ class BiTreeNode(ABC):
         """Returns the key"""
         return self._key
     @key.setter
-    def key(self, key: Key):
+    def key(self, key: Any):
         self._key = key
     @property
     def left(self):

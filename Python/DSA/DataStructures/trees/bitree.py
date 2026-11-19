@@ -1,11 +1,11 @@
-from nodes.bitree_node import BiTreeNode, Key
-from trees.base_tree import BaseTree
+from nodes.bitree_node import BiTreeNode
+from trees.base_tree import BaseTree, Key
 
-class BiTree(BaseTree[BiTreeNode]):
+class BiTree[KeyT: Key](BaseTree[KeyT, BiTreeNode]):
     """Represents a binary tree"""
     _root: BiTreeNode | None
 
-    def insert(self, key: Key):
+    def insert(self, key: KeyT):
         """Insert the key into the tree. Allows duplicate keys."""
         new_node = BiTreeNode(key)
         if self._root is None:
@@ -25,19 +25,19 @@ class BiTree(BaseTree[BiTreeNode]):
                     node = node.left
         self._count += 1
 
-    def get_min(self) -> Key:
+    def get_min(self) -> KeyT:
         """Returns the minimum key"""
         root = self._raise_if_empty()
         return BiTree._find_min(root).key
 
-    def get_max(self) -> Key:
+    def get_max(self) -> KeyT:
         """Returns the maximum key"""
         node = self._raise_if_empty() # _root
         while node.right:
             node = node.right
         return node.key
 
-    def get_key_depth(self, key: Key) -> int:
+    def get_key_depth(self, key: KeyT) -> int:
         """
         Returns the key depth (the first one found).
         The root depth is 0.
@@ -52,7 +52,7 @@ class BiTree(BaseTree[BiTreeNode]):
             node = node.right if key > node.key else node.left
         return -1
 
-    def get_key_count(self, key: Key):
+    def get_key_count(self, key: KeyT):
         """Returns the key count"""
         count = 0
         node = self._root

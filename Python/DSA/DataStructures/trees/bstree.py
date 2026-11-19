@@ -1,6 +1,5 @@
 from typing import Any
-from trees.base_tree import BaseTree
-from nodes.bitree_node import Key
+from trees.base_tree import BaseTree, Key
 from nodes.bitree_val_node import BiTreeValNode
 
 class DuplicateKeyError(Exception):
@@ -15,10 +14,10 @@ class NotFoundKeyError(Exception):
         self.key = key
         super().__init__(f"[{when}]: The key ({self.key}) is not found!")
 
-class BSTree(BaseTree[BiTreeValNode]):
+class BSTree[KeyT: Key](BaseTree[KeyT, BiTreeValNode]):
     """Represents Binary Search Tree"""
 
-    def insert(self, key: Key, value: Any):
+    def insert(self, key: KeyT, value: Any):
         """Insert the value with the key into the tree. Forbids duplicate keys."""
         new_node = BiTreeValNode(key, value)
         if self._root is None:
@@ -40,7 +39,7 @@ class BSTree(BaseTree[BiTreeValNode]):
                     node = node.left
         self._count += 1
 
-    def get(self, key: Key) -> Any:
+    def get(self, key: KeyT) -> Any:
         """Finds and returns a value by the key"""
         node = self._find_node(self._root, key)
         if node is None:

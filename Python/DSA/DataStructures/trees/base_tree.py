@@ -1,9 +1,14 @@
-from typing import Generator
+from typing import Generator, Any, Protocol
 from abc import ABC
 from structs.queue_ import Queue
-from nodes.bitree_node import BiTreeNode, Key
+from nodes.bitree_node import BiTreeNode
 
-class BaseTree[BiTreeNodeT: BiTreeNode](ABC):
+class Key(Protocol):
+    """Key Protocol"""
+    def __eq__(self, other: object) -> bool: ...
+    def __gt__(self, other: Any) -> bool: ...
+
+class BaseTree[KeyT: Key, BiTreeNodeT: BiTreeNode](ABC):
     """Represents an abstract binary tree"""
     _root: BiTreeNodeT | None
     _count: int
@@ -22,14 +27,14 @@ class BaseTree[BiTreeNodeT: BiTreeNode](ABC):
         return self._root is None
 
     @staticmethod
-    def _find_node(root: BiTreeNodeT | None, key: Key) -> BiTreeNodeT | None:
+    def _find_node(root: BiTreeNodeT | None, key: KeyT) -> BiTreeNodeT | None:
         while root:
             if key == root.key:
                 return root
             root = root.right if key > root.key else root.left
         return None
 
-    def find(self, key: Key) -> bool:
+    def find(self, key: KeyT) -> bool:
         """Returns True if the key is in the tree and False if not"""
         return not BaseTree._find_node(self._root, key) is None
 
@@ -39,12 +44,12 @@ class BaseTree[BiTreeNodeT: BiTreeNode](ABC):
             node = node.left
         return node
 
-    def delete(self, key: Key):
+    def delete(self, key: KeyT):
         """
         Deletes a node with the specified key from the tree.
         If duplicate keys are allowed, deletes the first one found.
         """
-        def delete_node(node: BiTreeNodeT | None, key: Key):
+        def delete_node(node: BiTreeNodeT | None, key: KeyT):
             find_node = False
             if node is None:
                 return find_node, None
@@ -73,7 +78,7 @@ class BaseTree[BiTreeNodeT: BiTreeNode](ABC):
         return find_node
 
     @property
-    def dfs_rec(self) -> Generator[Key, None, None]:
+    def dfs_rec(self) -> Generator[KeyT, None, None]:
         """Returns a generator for recursive DFS"""
         def preorder(node: BiTreeNodeT | None):
             if node is None:
@@ -84,7 +89,7 @@ class BaseTree[BiTreeNodeT: BiTreeNode](ABC):
         yield from preorder(self._root)
 
     @property
-    def bfs(self) -> Generator[Key, None, None]:
+    def bfs(self) -> Generator[KeyT, None, None]:
         """Returns a generator for BFS"""
         if self.is_empty():
             return
