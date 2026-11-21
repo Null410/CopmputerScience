@@ -9,7 +9,13 @@ class Key(Protocol):
     def __gt__(self, other: Any) -> bool: ...
 
 class BaseTree[KeyT: Key, BiTreeNodeT: BiTreeNode](ABC):
-    """Represents an abstract binary tree"""
+    """
+    Represents an abstract binary tree (similar to an unbalanced BFS).
+    The logic of tree nodes:
+        - the key of the left child is less than or equal to the key of the parent;
+        - the key of the right child is strictly greater than the key of the parent;
+        - duplicate keys are allowed.
+    """
     _root: BiTreeNodeT | None
     _count: int
 

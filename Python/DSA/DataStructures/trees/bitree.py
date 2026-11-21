@@ -2,7 +2,13 @@ from nodes.bitree_node import BiTreeNode
 from trees.base_tree import BaseTree, Key
 
 class BiTree[KeyT: Key](BaseTree[KeyT, BiTreeNode]):
-    """Represents a binary tree"""
+    """
+    Represents a binary tree (similar to an unbalanced BFS).
+    The logic of tree nodes:
+        - the key of the left child is less than or equal to the key of the parent;
+        - the key of the right child is strictly greater than the key of the parent;
+        - duplicate keys are allowed.
+    """
     _root: BiTreeNode | None
 
     def insert(self, key: KeyT):

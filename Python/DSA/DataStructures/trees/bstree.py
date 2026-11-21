@@ -15,7 +15,13 @@ class NotFoundKeyError(Exception):
         super().__init__(f"[{when}]: The key ({self.key}) is not found!")
 
 class BSTree[KeyT: Key](BaseTree[KeyT, BiTreeValNode]):
-    """Represents Binary Search Tree"""
+    """
+    Represents an unbalanced Binary Search Tree.
+    The logic of tree nodes:
+        - the key of the left child is strictly less less than the key of the parent;
+        - the key of the right child is strictly greater than the key of the parent;
+        - duplicate keys are not allowed.
+    """
 
     def insert(self, key: KeyT, value: Any):
         """Insert the value with the key into the tree. Forbids duplicate keys."""

@@ -3,10 +3,8 @@ from typing import Protocol, TypeVar, Callable
 
 class Comparable(Protocol):
     """Comparable Protocol"""
-    def __lt__(self, other) -> bool:
-        pass
-    def __gt__(self, other) -> bool:
-        pass
+    def __lt__(self, other) -> bool: ...
+    def __gt__(self, other) -> bool: ...
 
 T = TypeVar('T', bound = Comparable)
 
