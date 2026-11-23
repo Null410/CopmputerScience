@@ -111,3 +111,25 @@ func DwarfSortFunc[T any](seq iter.Seq[T], compare func(a, b T) int) []T {
 func DwarfSort[T cmp.Ordered](seq iter.Seq[T]) []T {
 	return DwarfSortFunc(seq, cmp.Compare)
 }
+
+// Selection sort.
+// Returns a new slice []T, sorted according to the comparison function.
+func SelectionSortFunc[T any](seq iter.Seq[T], compare func(a, b T) int) []T {
+	arr := slices.Collect(seq)
+	for i := 0; i < len(arr)-1; i++ {
+		min_idx := i
+		for j := i + 1; j < len(arr); j++ {
+			if compare(arr[j], arr[min_idx]) < 0 {
+				min_idx = j
+			}
+		}
+		arr[i], arr[min_idx] = arr[min_idx], arr[i]
+	}
+	return arr
+}
+
+// Selection sort.
+// Returns a mew slice []T, sorted in ascending order.
+func SelectionSort[T cmp.Ordered](seq iter.Seq[T]) []T {
+	return SelectionSortFunc(seq, cmp.Compare)
+}

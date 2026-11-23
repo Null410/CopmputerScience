@@ -20,6 +20,7 @@ func getSorts() []sortFunc {
 		{"CocktailSort", sortings.CocktailSort[int]},
 		{"InsertionSort", sortings.InsertionSort[int]},
 		{"DwarfSort", sortings.DwarfSort[int]},
+		{"SelectionSort", sortings.SelectionSort[int]},
 	}
 }
 
