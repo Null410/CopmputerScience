@@ -133,3 +133,86 @@ func SelectionSortFunc[T any](seq iter.Seq[T], compare func(a, b T) int) []T {
 func SelectionSort[T cmp.Ordered](seq iter.Seq[T]) []T {
 	return SelectionSortFunc(seq, cmp.Compare)
 }
+
+func quickSortLomutoFunc[T any](arr []T, l, r int, compare func(a, b T) int) {
+	if l >= r {
+		return
+	}
+
+	partition := func(arr []T, l, r int) int {
+		pivot := arr[r]
+		p := l - 1
+		for i := l; i < r; i++ {
+			if compare(arr[i], pivot) <= 0 {
+				p++
+				arr[i], arr[p] = arr[p], arr[i]
+			}
+		}
+		p++
+		arr[p], arr[r] = arr[r], arr[p]
+		return p
+	}
+
+	p := partition(arr, l, r)
+	quickSortLomutoFunc(arr, l, p-1, compare)
+	quickSortLomutoFunc(arr, p+1, r, compare)
+}
+
+// Quick sort (Lomuto scheme, by last)
+// Returns a new slice []T, sorted according to the comparison function.
+func QuickSortLomutoFunc[T any](seq iter.Seq[T], compare func(a, b T) int) []T {
+	arr := slices.Collect(seq)
+	quickSortLomutoFunc(arr, 0, len(arr)-1, compare)
+	return arr
+}
+
+// Quick sort (Lomuto scheme, by last)
+// Returns a mew slice []T, sorted in ascending order.
+func QuickSortLomuto[T cmp.Ordered](seq iter.Seq[T]) []T {
+	return QuickSortLomutoFunc(seq, cmp.Compare)
+}
+
+func quickSortHoareFunc[T any](arr []T, l, r int, compare func(a, b T) int) {
+	if l >= r {
+		return
+	}
+
+	partition := func(arr []T, l, r int) int {
+		pivot := arr[(l+r)/2]
+		i := l
+		j := r
+		for i < j {
+			for compare(arr[i], pivot) < 0 {
+				i++
+			}
+			for compare(arr[j], pivot) > 0 {
+				j--
+			}
+			if i >= j {
+				break
+			}
+			arr[i], arr[j] = arr[j], arr[i]
+			i++
+			j--
+		}
+		return j
+	}
+
+	p := partition(arr, l, r)
+	quickSortHoareFunc(arr, l, p, compare)
+	quickSortHoareFunc(arr, p+1, r, compare)
+}
+
+// Quick sort (Hoare scheme)
+// Returns a new slice []T, sorted according to the comparison function.
+func QuickSortHoareFunc[T any](seq iter.Seq[T], compare func(a, b T) int) []T {
+	arr := slices.Collect(seq)
+	quickSortHoareFunc(arr, 0, len(arr)-1, compare)
+	return arr
+}
+
+// Quick sort (Hoare scheme)
+// Returns a mew slice []T, sorted in ascending order.
+func QuickSortHoare[T cmp.Ordered](seq iter.Seq[T]) []T {
+	return QuickSortHoareFunc(seq, cmp.Compare)
+}
