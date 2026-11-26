@@ -216,3 +216,45 @@ func QuickSortHoareFunc[T any](seq iter.Seq[T], compare func(a, b T) int) []T {
 func QuickSortHoare[T cmp.Ordered](seq iter.Seq[T]) []T {
 	return QuickSortHoareFunc(seq, cmp.Compare)
 }
+
+func mergeFunc[T any](left, right []T, compare func(a, b T) int) []T {
+	leftSize := len(left)
+	rightSize := len(right)
+	arr := make([]T, 0, leftSize+rightSize)
+	l, r := 0, 0
+	for i := 0; l < leftSize && r < rightSize; i++ {
+		if compare(left[l], right[r]) < 0 {
+			arr = append(arr, left[l])
+			l++
+		} else {
+			arr = append(arr, right[r])
+			r++
+		}
+	}
+	arr = append(arr, left[l:]...)
+	arr = append(arr, right[r:]...)
+	return arr
+}
+
+func divideSortFunc[T any](arr []T, compare func(a, b T) int) []T {
+	if len(arr) <= 1 {
+		return arr
+	}
+	mid := len(arr) / 2
+	left := divideSortFunc(arr[:mid], compare)
+	right := divideSortFunc(arr[mid:], compare)
+	return mergeFunc(left, right, compare)
+}
+
+// Merge sort
+// Returns a new slice []T, sorted according to the comparison function.
+func MergeSortFunc[T any](seq iter.Seq[T], compare func(a, b T) int) []T {
+	arr := slices.Collect(seq)
+	return divideSortFunc(arr, compare)
+}
+
+// Merge sort
+// Returns a mew slice []T, sorted in ascending order.
+func MergeSort[T cmp.Ordered](seq iter.Seq[T]) []T {
+	return MergeSortFunc(seq, cmp.Compare)
+}

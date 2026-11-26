@@ -23,6 +23,7 @@ func getSorts() []sortFunc {
 		{"SelectionSort", sortings.SelectionSort[int]},
 		{"QuickSortLomuto", sortings.QuickSortLomuto[int]},
 		{"QuickSortHoare", sortings.QuickSortHoare[int]},
+		{"MergeSort", sortings.MergeSort[int]},
 	}
 }
 
