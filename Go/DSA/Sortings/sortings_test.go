@@ -24,6 +24,7 @@ func getSorts() []sortFunc {
 		{"QuickSortLomuto", sortings.QuickSortLomuto[int]},
 		{"QuickSortHoare", sortings.QuickSortHoare[int]},
 		{"MergeSort", sortings.MergeSort[int]},
+		{"CombSort", sortings.CombSort[int]},
 	}
 }
 

@@ -8,8 +8,8 @@ import (
 
 func bubble[T any](arr []T, compare func(a, b T) int) {
 	n := len(arr)
-	border := 0
 	for n > 1 {
+		border := 0
 		for i := 0; i < n-1; i++ {
 			if compare(arr[i], arr[i+1]) > 0 {
 				arr[i], arr[i+1] = arr[i+1], arr[i]
@@ -257,4 +257,36 @@ func MergeSortFunc[T any](seq iter.Seq[T], compare func(a, b T) int) []T {
 // Returns a mew slice []T, sorted in ascending order.
 func MergeSort[T cmp.Ordered](seq iter.Seq[T]) []T {
 	return MergeSortFunc(seq, cmp.Compare)
+}
+
+// Comb sort
+// Returns a new slice []T, sorted according to the comparison function.
+func CombSortFunc[T any](seq iter.Seq[T], compare func(a, b T) int) []T {
+	arr := slices.Collect(seq)
+
+	nextStep := func(step int) int {
+		const f = 1.247331
+		return int(float64(step) / f)
+	}
+
+	// comb
+	step := nextStep(len(arr))
+	for step > 1 {
+		for i := 0; i < len(arr)-step; i += step {
+			if compare(arr[i], arr[i+step]) > 0 {
+				arr[i], arr[i+step] = arr[i+step], arr[i]
+			}
+		}
+		step = nextStep(step)
+	}
+
+	// bubble
+	bubble(arr, compare)
+	return arr
+}
+
+// Comb sort
+// Returns a mew slice []T, sorted in ascending order.
+func CombSort[T cmp.Ordered](seq iter.Seq[T]) []T {
+	return CombSortFunc(seq, cmp.Compare)
 }
