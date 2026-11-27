@@ -181,7 +181,7 @@ func quickSortHoareFunc[T any](arr []T, l, r int, compare func(a, b T) int) {
 		pivot := arr[(l+r)/2]
 		i := l
 		j := r
-		for i < j {
+		for i <= j {
 			for compare(arr[i], pivot) < 0 {
 				i++
 			}
